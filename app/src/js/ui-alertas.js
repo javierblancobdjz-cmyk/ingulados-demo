@@ -87,16 +87,14 @@
     var r = regla(a.regla_id), d = db();
     var val = d.valoraciones[a.clave];
     var com = a.patogeno_id ? d.comunicaciones["COM~" + a.expediente_id + "~" + a.patogeno_id] : null;
-    var capa = ING.idx.capas && ING.idx.capas[a.capa];
     var estadoTxt = a.estado === "pendiente" ? "Sin valorar" : a.estado === "valorada" ? "Valorada" : "Informativa";
 
     var cab = h("div", { class: "al-cab" },
       ui.chipNivel(a.nivel),
-      h("span", { class: "chip", "data-tono": "borde" }, "Capa " + (capa ? capa.nombre.toLowerCase() : a.capa)),
-      h("span", { class: "chip al-estado", "data-tono": a.estado === "valorada" ? "ok" : a.estado === "pendiente" ? "pendiente" : "borde" },
+      h("span", { class: "al-estado", "data-estado": a.estado },
         ui.icon(a.estado === "valorada" ? "circle-check" : a.estado === "pendiente" ? "clock" : "info"), h("span", null, estadoTxt)));
 
-    var titulo = h("h3", { class: "al-tit" }, h("span", { class: "al-tit-txt" }, md(r.titulo)), " ", h("span", { class: "al-id mono" }, a.regla_id));
+    var titulo = h("h3", { class: "al-tit" }, md(r.titulo));
     var expLink = h("p", { class: "al-exp" },
       h("a", { href: "#/exp/" + a.expediente_id + "/alertas", testid: "alerta-exp", class: "al-ref" }, ui.icon("folder-open"), h("span", null, a.expediente_id)),
       h("span", { class: "al-ent" }, descEntidad(a)));
@@ -146,7 +144,8 @@
     return h("article", {
       class: "tarjeta alerta", testid: "alerta", "data-clave": a.clave, "data-estado": a.estado, "data-nivel": a.nivel,
       "data-regla": a.regla_id, "data-ref": a.expediente_id, "aria-label": "Alerta " + a.regla_id + " · " + a.expediente_id
-    }, cab, titulo, expLink, cuerpo, pie, bloqueCom, bloqueVal);
+    }, titulo, cab, expLink, cuerpo, pie, bloqueCom, bloqueVal,
+      h("p", { class: "al-codigo", testid: "codigo-regla" }, "regla " + a.regla_id));
   }
 
   /* ------------------------------------------------------------ buscar una alerta viva por clave */
@@ -185,10 +184,10 @@
         } }, c);
     }));
     ctl = ui.hoja({
-      titulo: "Valorar " + a.regla_id,
+      titulo: "Valorar: " + ING.fmt.plano(r.titulo),
       testid: "hoja-valorar",
       cuerpo: [
-        h("p", { class: "al-hoja-tit" }, md(r.titulo), " · ", h("b", null, a.expediente_id)),
+        h("p", { class: "al-hoja-tit" }, h("b", null, a.expediente_id)),
         h("p", { class: "sec al-ent" }, descEntidad(a)),
         r.accion_md ? h("p", { class: "sec" }, h("b", null, "Qué hacer: "), md(r.accion_md)) : null,
         h("p", { class: "etiqueta" }, "Comentario rápido"),
@@ -217,7 +216,7 @@
     recientes[a.clave] = 1;
     return ING.store.guardar("valoraciones", doc, {
       tipo: "ALERTA_VALORADA", coleccion: "valoraciones", entidad_id: a.clave, expediente_id: a.expediente_id,
-      resumen: "Alerta " + a.regla_id + " valorada · «" + comentario + "»", cambios: [], motivo: null
+      resumen: "Alerta valorada: " + ING.fmt.plano(regla(a.regla_id).titulo) + " (" + a.regla_id + ") · «" + comentario + "»", cambios: [], motivo: null
     }).then(function () { ui.toast("Alerta valorada"); return true; }, function () { ui.toast("No se ha podido guardar la valoración"); return false; });
   }
 
@@ -276,9 +275,18 @@
   }
 
   /* ------------------------------------------------------------ tandas no válidas */
+  var LLANO = {
+    "PCR-01": "el control que debía salir vacío ha amplificado (posible contaminación)",
+    "PCR-02": "el control de extracción, que debía salir vacío, ha amplificado (posible contaminación)",
+    "PCR-03": "el control positivo no ha salido como debía (no se puede asegurar que la tanda detecte bien)"
+  };
   function tarjetaTandaNoValida(x) {
     var t = x.tanda, d = ING.idx.dianas[t.diana_id] || {}, c = t.controles || {};
-    var ctrl = function (nom, v) { return h("span", { class: "chip", "data-tono": "borde" }, nom + " " + (v == null ? "Sin Ct" : ING.fmt.num(v, 1))); };
+    var ctrl = function (nom, v) { return h("span", { class: "chip", "data-tono": "borde" }, nom + " " + (v == null ? "sin amplificación" : ING.fmt.num(v, 1))); };
+    var porque = x.reglas.map(function (rid) { return LLANO[rid] || ING.fmt.plano(regla(rid).titulo).toLowerCase(); }).join("; ");
+    var n = x.repetir.length;
+    var llano = "Esta tanda no vale: " + porque + ". " +
+      (n ? "Hay que repetir " + (n === 1 ? "su análisis." : "sus " + n + " análisis.") : "Sus análisis ya se han repetido en otra tanda.");
     var filas = x.analisis.map(function (aid) {
       var an = db().analisis[aid];
       var otra = x.repetida_en[aid];
@@ -286,17 +294,16 @@
         : otra ? h("span", { class: "chip", "data-tono": "ok" }, ui.icon("check"), h("span", null, "Repetida en " + otra))
           : h("span", { class: "chip", "data-tono": "borde" }, "—");
       return h("li", { class: "al-tnv-fila" },
-        an ? h("a", { href: "#/exp/" + an.expediente_id + "/muestras", class: "mono" }, aid.replace(/-pcr_\w+$/, "")) : h("span", { class: "mono" }, aid), est);
+        an ? h("a", { href: "#/exp/" + an.expediente_id + "/muestras", class: "num" }, aid.replace(/-pcr_\w+$/, "")) : h("span", { class: "num" }, aid), est);
     });
-    return h("article", { class: "tarjeta alerta al-tnv", testid: "tanda-no-valida", "data-tanda": t.id, "data-nivel": "no_valido" },
-      h("div", { class: "al-cab" }, ui.chipNivel("no_valido"), x.reglas.map(function (rid) {
-        return h("span", { class: "chip", "data-tono": "novalido", title: ING.fmt.plano(regla(rid).titulo) }, rid);
-      })),
-      h("h3", { class: "al-tit" }, h("span", { class: "mono" }, t.id), " · ", md(d.nombre || t.diana_id)),
+    return h("article", { class: "tarjeta alerta al-tnv", testid: "tanda-no-valida", "data-tanda": t.id, "data-nivel": "no_valido", "data-reglas": x.reglas.join(",") },
+      h("h3", { class: "al-tit" }, "Tanda ", h("span", { class: "num" }, t.id), " · ", md(d.nombre || t.diana_id)),
+      h("div", { class: "al-cab" }, ui.chipNivel("no_valido")),
+      h("p", { class: "al-llano", testid: "tanda-llano" }, llano),
       h("p", { class: "sec muted" }, ING.fmt.fecha(t.fecha) + " · " + (t.equipo || "") + " · " + (t.pocillos || []).length + " pocillos"),
-      x.reglas.map(function (rid) { var r = regla(rid); return h("p", { class: "al-msg" }, h("b", null, rid + ": "), md(r.titulo), r.mensaje_md ? " · " : null, r.mensaje_md ? md(r.mensaje_md) : null); }),
       h("div", { class: "chips al-ctrl" }, ctrl("CP", c.cp), ctrl("NTC", c.ntc), ctrl("CEX", c.cex)),
       h("ul", { class: "al-tnv-lista" }, filas),
+      h("p", { class: "al-codigo" }, "regla " + x.reglas.join(", ")),
       x.repetir.length ? h("div", { class: "botones" },
         h("a", { class: "btn btn-sec", href: "#/lab/tanda?diana=" + encodeURIComponent(t.diana_id), testid: "btn-repetir-tanda" },
           ui.icon("rotate-ccw"), h("span", null, "Nueva tanda (" + x.repetir.length + " por repetir)"))) : null);
@@ -306,6 +313,12 @@
   var filtro = "pendientes";
   var recientes = {};       // sin valorar al entrar o valoradas en esta visita: siguen visibles (ya valoradas) hasta salir de la ruta
 
+  var ORDEN_CAPA = { sanitaria: 0, analitica: 1, tecnica: 2 };
+  function fechaAlerta(d, a) {
+    if (a.detectado_en) return a.detectado_en;
+    var e = d.expedientes[a.expediente_id];
+    return e ? e.recibido_en : "";
+  }
   function sinValorar(a) { return a.estado === "pendiente" || a.comunicacion_pendiente; }
 
   function pantalla(p) {
@@ -333,7 +346,10 @@
       var lista = visibles.filter(function (a) { return a.nivel === nv; }).sort(function (x, y) {
         var px = sinValorar(x) ? 0 : 1, py = sinValorar(y) ? 0 : 1;
         if (px !== py) return px - py;
-        if (x.expediente_id !== y.expediente_id) return x.expediente_id < y.expediente_id ? 1 : -1;
+        var cx = ORDEN_CAPA[x.capa] == null ? 9 : ORDEN_CAPA[x.capa], cy = ORDEN_CAPA[y.capa] == null ? 9 : ORDEN_CAPA[y.capa];
+        if (cx !== cy) return cx - cy;
+        var fx = fechaAlerta(d, x), fy = fechaAlerta(d, y);
+        if (fx !== fy) return fx < fy ? 1 : -1;
         return x.clave < y.clave ? -1 : x.clave > y.clave ? 1 : 0;
       });
       var cuenta = lista.length;
@@ -351,7 +367,7 @@
     var tnv = ING.motor.tandasNoValidas(d);
     var secTandas = h("section", { class: "al-grupo al-tandas", testid: "seccion-tandas-no-validas", "data-n": String(tnv.length) },
       h("h2", { class: "al-grupo-tit" }, ui.chipNivel("no_valido"), h("span", null, "Tandas no válidas"), h("span", { class: "n" }, String(tnv.length))),
-      h("p", { class: "sec muted" }, "No son alertas del expediente: es una marca de la tanda. Sus análisis pasan a «Repetir» y no se puede emitir hasta repetirlos."),
+      h("p", { class: "sec muted" }, "Cada tanda de PCR lleva controles. Si un control falla, ningún resultado de esa tanda vale: sus análisis pasan a «Repetir» y el expediente no se puede emitir hasta repetirlos."),
       tnv.length ? h("div", { class: "pila" }, tnv.map(tarjetaTandaNoValida)) : h("p", { class: "muted" }, "Todas las tandas son válidas."));
 
     return h("div", { class: "pantalla-alertas", testid: "pantalla-alertas" },

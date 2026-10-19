@@ -205,6 +205,8 @@
     if (!ING.sha256) return { error: "No se puede calcular la huella en este navegador." };
     var evs = eventosOrdenados();
     var ch = cadena(evs, reg.manip);
+    /* Si el registro tiene menos eventos que la referencia, es un reinicio de la demo: se toma referencia nueva */
+    if (reg.base && !reg.manip && ch.length < reg.baseN) reg.base = null;
     var res = { n: ch.length, ultima: ch.length ? ch[ch.length - 1].h : "", roto: null, nuevos: 0, primera: !reg.base };
     if (reg.base) {
       for (var i = 0; i < ch.length; i++) {
@@ -213,7 +215,7 @@
         if (b !== ch[i].h) { res.roto = { pos: i + 1, ev: evs[i] }; break; }
       }
     }
-    if (!res.roto && !reg.manip) { reg.base = {}; ch.forEach(function (x) { reg.base[x.id] = x.h; }); }
+    if (!res.roto && !reg.manip) { reg.base = {}; reg.baseN = ch.length; ch.forEach(function (x) { reg.base[x.id] = x.h; }); }
     return res;
   }
   function nodoResultado(r) {
@@ -225,13 +227,14 @@
           h("p", { class: "sec", style: { margin: 0 } }, r.roto.ev.id + " · " + fmt.fechaHora(r.roto.ev.ts) + ": su contenido no coincide con el de la última verificación. Desde ahí, todas las huellas cambian.")));
     }
     return h("div", { class: "aviso", "data-tono": "ok" }, ui.icon("circle-check"),
-      h("div", null, h("p", { style: { margin: 0 } }, h("b", null, (r.primera ? "Cadena calculada: " : "Cadena correcta: ") + r.n + " eventos"), " · última huella ", h("span", { class: "mono" }, r.ultima.slice(0, 8))),
-        !r.primera ? h("p", { class: "sec", style: { margin: 0 } }, r.nuevos ? "Coincide con la verificación anterior; " + r.nuevos + (r.nuevos === 1 ? " evento nuevo añadido." : " eventos nuevos añadidos.") : "Coincide con la verificación anterior.") : null));
+      h("div", null, h("p", { style: { margin: 0 } }, h("b", null, "Cadena correcta: " + r.n + " eventos"), " · última huella ", h("span", { class: "mono" }, r.ultima.slice(0, 8))),
+        h("p", { class: "sec", style: { margin: 0 } }, r.primera ? "Ningún evento ha cambiado desde que se registró." : r.nuevos ? "Ningún evento anterior ha cambiado; " + r.nuevos + (r.nuevos === 1 ? " evento nuevo añadido." : " eventos nuevos añadidos.") : "Ningún evento ha cambiado.")));
   }
   function nombreRol(id) { var r = ui.rolInfo(id); return id === "sistema" ? "Sistema" : (r && r.id === id ? r.nombre : (id || "—")); }
   function texto(v) { if (v === null || v === undefined || v === "") return "—"; if (typeof v === "object") return JSON.stringify(v); return String(v); }
   ING.rutas["mas/registro"] = function () {
     var evs = eventosOrdenados();
+    if (!reg.base && !reg.manip && ING.sha256) { try { verificar(); } catch (e) { reg.base = null; } }
     var tipos = {}; evs.forEach(function (e) { tipos[e.tipo] = (tipos[e.tipo] || 0) + 1; });
     var zonaRes = h("div", { class: "verificacion", testid: "resultado-verificacion", role: "status", "aria-live": "polite" }, nodoResultado(reg.resultado));
     var lista = h("ol", { class: "ev-lista", reversed: true });

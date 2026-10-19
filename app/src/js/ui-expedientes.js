@@ -12,6 +12,16 @@
   var L = { q: "", estado: "TODOS", tipo: "", pagina: 1, hashVisto: null };
   var POR_PAGINA = 20;
 
+  /* ?estado= admite mayúsculas o minúsculas (el panel usa "en_curso") y algunos alias */
+  function normEstado(v) {
+    var e = String(v || "").trim().toUpperCase().replace(/[\s-]+/g, "_");
+    var alias = { TODO: "TODOS", ALL: "TODOS", ENCURSO: "EN_CURSO", POR_VALIDAR: "POR_VALIDAR", LISTO: "LISTO_PARA_VALIDAR", PENDIENTE: "PENDIENTE_VALORACION" };
+    e = alias[e] || e;
+    if (e === "TODOS" || e === "EN_CURSO" || e === "POR_VALIDAR" || cx.ESTADOS[e]) return e;
+    return "TODOS";
+  }
+  cx.normEstado = normEstado;
+
   function filasExpedientes(db) {
     var ids = Object.keys(db.expedientes || {});
     return ids.map(function (ref) {
@@ -35,7 +45,7 @@
     var hashAhora = location.hash;
     if (L.hashVisto !== hashAhora) {
       /* filtros que llegan desde el panel: ?estado=…&tipo=…&q=… */
-      if (r.q.estado) { L.estado = r.q.estado; L.pagina = 1; }
+      if (r.q.estado) { L.estado = normEstado(r.q.estado); L.pagina = 1; }
       if (r.q.tipo != null) { L.tipo = r.q.tipo; L.pagina = 1; }
       if (r.q.q != null) { L.q = r.q.q; L.pagina = 1; }
       L.hashVisto = hashAhora;
@@ -45,7 +55,7 @@
     var sec = h("section", { class: "cx-lista-exp", "aria-labelledby": "cx-lista-titulo" });
     sec.appendChild(h("h1", { id: "cx-lista-titulo", class: "cx-h1", text: "Expedientes" }));
     var busca = h("input", { type: "search", class: "cx-input cx-buscador", "data-testid": "buscador", value: L.q,
-      placeholder: "Referencia, ref. del remitente, procedencia o código", "aria-label": "Buscar expedientes", autocomplete: "off", enterkeyhint: "search" });
+      placeholder: "Buscar referencia o finca", "aria-label": "Buscar expedientes", autocomplete: "off", enterkeyhint: "search" });
     var zonaChips = h("div");
     var zonaLista = h("div", { class: "cx-lista-zona", "aria-live": "polite" });
     busca.addEventListener("input", function () { L.q = busca.value; L.pagina = 1; pintarChips(); pintarLista(); });
@@ -128,11 +138,15 @@
       h("p", { class: "cx-tx-sub", text: "recibido " + cx.fechaHoraCorta(e.recibido_en) + (e.ref_remitente ? " · ref. remitente " + e.ref_remitente : "") }),
       h("div", { class: "cx-tx-prog" },
         h("span", { class: "cx-prog-txt", "data-testid": "progreso-tarjeta", text: "Micro " + cx.txtProg(pr.micro) + " · Molecular " + cx.txtProg(pr.molecular) }),
-        nPend ? h("span", { class: "cx-tx-alertas", "aria-label": nPend + " alertas por valorar" }, cx.icon("triangle-alert"), h("span", { text: String(nPend) })) : null),
+        nPend ? h("span", { class: "cx-tx-alertas", "aria-label": cx.textoPendientes(pend), title: cx.textoPendientes(pend) }, cx.icon("triangle-alert"), h("span", { text: String(nPend) })) : null),
       h("div", { class: "cx-barra-fina", "aria-hidden": "true" }, h("span", { style: "width:" + pct + "%" })));
   }
 
   /* ================================================================ #/exp/<ref>[/<pestaña>] */
+  var TAB_ESTADO = { RECIBIDO: "muestras", EN_ANALISIS: "muestras", PENDIENTE_VALORACION: "alertas", LISTO_PARA_VALIDAR: "informe", EMITIDO: "informe", BLOQUEADO: "muestras" };
+  /* "Menos de 24 h" sin partir: espacio irrompible entre cifra y unidad */
+  function nb(t) { return String(t == null ? "" : t).replace(/(\d) (h|°C|días?)\b/g, "$1\u00a0$2"); }
+  cx.nb = nb;
   var PESTANAS = [["resumen", "Resumen"], ["muestras", "Muestras"], ["alertas", "Alertas"], ["informe", "Informe"], ["registro", "Registro"]];
 
   function vistaFicha() {
@@ -156,7 +170,8 @@
     sec.appendChild(h("div", { class: "cx-ficha-cab" },
       h("a", { href: "#/expedientes", class: "cx-btn-icono", "aria-label": "Volver a expedientes", "data-testid": "btn-volver" }, cx.icon("arrow-left")),
       h("h1", { class: "cx-h1 cx-ficha-ref", text: ref }),
-      cx.chipEstado(estado, "ficha-estado")));
+      h("a", { href: "#/exp/" + ref + "/" + TAB_ESTADO[estado], class: "cx-chip-enlace", "data-testid": "chip-estado-enlace",
+        "aria-label": "Estado: " + (cx.ESTADOS[estado] || [estado])[0] + ". Ver " + TAB_ESTADO[estado] }, cx.chipEstado(estado, "ficha-estado"))));
     sec.appendChild(h("p", { class: "cx-ficha-datos" },
       h("span", { text: (proc.nombre || "") + " (" + (tipo || "") + " · " + (proc.codigo || "") + ")" }), " · ",
       h("span", { text: rem.nombre || "" }), " · ",
@@ -175,7 +190,10 @@
       tabs.appendChild(h("a", { href: "#/exp/" + ref + (p[0] === "resumen" ? "" : "/" + p[0]), role: "tab", "aria-selected": on ? "true" : "false",
         class: "cx-tab" + (on ? " on" : ""), "data-testid": "tab-" + p[0] }, h("span", { text: p[1] }), extra));
     });
-    sec.appendChild(tabs);
+    var tabsCaja = h("div", { class: "cx-tabs-caja" }, tabs);
+    function pista() { tabsCaja.classList.toggle("hay-mas", tabs.scrollWidth - tabs.clientWidth - tabs.scrollLeft > 4); }
+    tabs.addEventListener("scroll", pista, { passive: true });
+    sec.appendChild(tabsCaja);
     var panel = h("div", { class: "cx-tab-panel", role: "tabpanel", "data-tab": tab });
     try {
       if (tab === "resumen") pResumen(panel, db, ref, estado, pr);
@@ -191,7 +209,8 @@
     /* la pestaña activa visible (desplazamiento horizontal propio) */
     root.requestAnimationFrame && root.requestAnimationFrame(function () {
       var t = tabs.querySelector(".on");
-      if (t && t.scrollIntoView && tabs.scrollWidth > tabs.clientWidth) { try { tabs.scrollLeft = t.offsetLeft - 16; } catch (x) { /* nada */ } }
+      if (t && tabs.scrollWidth > tabs.clientWidth) { try { tabs.scrollLeft = Math.max(0, t.offsetLeft - 48); } catch (x) { /* nada */ } }
+      pista();
     });
     return sec;
   }
@@ -204,8 +223,10 @@
     try { actual = ING.motor.huella(db, ref); } catch (e) { actual = ""; }
     return h("div", { class: "cx-aviso cx-aviso-revisar cx-banda-caducada", role: "status", "data-testid": "banda-caducada" },
       cx.icon("triangle-alert"),
-      h("p", { text: "La validación de v" + ult.version + " ha caducado: han cambiado los datos después de emitir (huella " +
-        String(ult.huella).slice(0, 8) + " → " + String(actual).slice(0, 8) + ")" }));
+      h("div", null,
+        h("p", null, h("strong", { text: "Se ha cambiado un dato después de emitir." }),
+          h("span", { text: " La v" + ult.version + " ya no vale: emite una v" + (ult.version + 1) + ", que la sustituye y deja constancia del motivo." })),
+        h("p", { class: "cx-sello-detalle", text: "sello " + String(ult.huella).slice(0, 8) + " → " + String(actual).slice(0, 8) })));
   }
 
   /* ---------------------------------------------------------------- Resumen */
@@ -230,10 +251,10 @@
     tl.appendChild(nodo("microscope", "Microbiología", [h("p", null, h("span", { text: "Progreso " }), h("strong", { text: cx.txtProg(pr.micro) }))], hecho(pr.micro)));
     tl.appendChild(nodo("dna", "Biología molecular", [h("p", null, h("span", { text: "Progreso " }), h("strong", { text: cx.txtProg(pr.molecular) }))], hecho(pr.molecular)));
     var nVal = pend.alertas, nCom = pend.comunicaciones;
-    var txtVal = nVal || nCom ? [nVal ? nVal + (nVal === 1 ? " alerta por valorar" : " alertas por valorar") : null, nCom ? nCom + (nCom === 1 ? " comunicación pendiente" : " comunicaciones pendientes") : null].filter(Boolean).join(" · ") : "Sin alertas pendientes";
+    var txtVal = cx.textoPendientes(pend) || "Sin alertas pendientes";
     tl.appendChild(nodo("triangle-alert", "Valoración", [txtVal], nVal || nCom ? "en-curso" : (estado === "RECIBIDO" || estado === "EN_ANALISIS" ? "pend" : "hecho")));
     var txtInf;
-    if (estado === "EMITIDO" && ult) txtInf = "v" + ult.version + " emitido " + cx.fechaHoraCorta(ult.emitido_en) + " · huella " + String(ult.huella).slice(0, 8);
+    if (estado === "EMITIDO" && ult) txtInf = "v" + ult.version + " emitido " + cx.fechaHoraCorta(ult.emitido_en) + " · sellado";
     else if (estado === "LISTO_PARA_VALIDAR") txtInf = "Listo para validar" + (ult ? " (v" + (ult.version + 1) + ")" : "");
     else if (estado === "BLOQUEADO") txtInf = "Bloqueado: todas las muestras están rechazadas";
     else txtInf = "Pendiente";
@@ -262,7 +283,7 @@
     if (e.observaciones) fila("Observaciones", h("span", { text: e.observaciones }));
     panel.appendChild(h("div", { class: "cx-tarjeta cx-datos-remitente" },
       h("h2", { class: "cx-h2" }, h("span", { text: "Datos aportados por el remitente" })),
-      h("p", { class: "cx-ayuda" }, h("span", { text: "Los aporta el cliente; el laboratorio no los verifica. " }), cx.refs(["REF-144"])),
+      h("p", { class: "cx-ayuda", text: "Los aporta el cliente; el laboratorio no los verifica." }),
       dl));
   }
 
@@ -274,6 +295,11 @@
     return "ACEPTADA";
   }
   cx.estadoMuestra = estadoMuestra;
+  /* el mismo texto en Resumen, pestaña Alertas e Informes; la insignia suma ambos (alertas + comunicaciones) */
+  cx.textoPendientes = function (p) {
+    return [p.alertas ? p.alertas + (p.alertas === 1 ? " alerta por valorar" : " alertas por valorar") : null,
+      p.comunicaciones ? p.comunicaciones + (p.comunicaciones === 1 ? " comunicación pendiente" : " comunicaciones pendientes") : null].filter(Boolean).join(" · ");
+  };
   var TXT_MUESTRA = { ACEPTADA: "Aceptada", ACEPTADA_CON_DESVIACION: "Aceptada con desviación", RECHAZADA: "Rechazada" };
   cx.TXT_MUESTRA = TXT_MUESTRA;
   var TXT_ANALISIS = { PENDIENTE: "Pendiente", RESULTADO: "Con resultado", REPETIR: "Repetir", ANULADO: "Anulado" };
@@ -349,8 +375,8 @@
             bloqueado ? null : botonCorregir({ col: "muestras", id: m.id, campo: "identificacion", etiqueta: "Identificación de " + m.id, valorActual: m.identificacion || "" }))),
         qrBtn));
       card.appendChild(h("p", { class: "cx-recep cx-recep-" + em }, cx.icon(em === "ACEPTADA" ? "circle-check" : em === "RECHAZADA" ? "ban" : "triangle-alert"),
-        h("span", { text: TXT_MUESTRA[em] + " · " + ((ING.idx.conservaciones[m.conservacion] || {}).nombre || m.conservacion) +
-          " · " + ((ING.idx.tiemposToma[m.tiempo_toma] || {}).nombre || "") + (m.envase_integro ? "" : " · envase no íntegro") +
+        h("span", { text: TXT_MUESTRA[em] + " · " + nb((ING.idx.conservaciones[m.conservacion] || {}).nombre || m.conservacion) +
+          " · " + nb((ING.idx.tiemposToma[m.tiempo_toma] || {}).nombre || "") + (m.envase_integro ? "" : " · envase no íntegro") +
           (m.rechazada && m.motivo_rechazo ? " · " + m.motivo_rechazo : "") })));
       var lista = h("ul", { class: "cx-analisis-lista" });
       ans.filter(function (a) { return a.muestra_id === m.id && !a.aislado_id; }).forEach(function (a) {
@@ -505,7 +531,7 @@
       guardar.disabled = true;
       Promise.resolve(ING.store.guardar(o.col, doc, ev)).then(function () {
         ctl.cerrar();
-        cx.toast(estabaEmitido ? "Dato corregido · la validación anterior ha caducado" : "Dato corregido");
+        cx.toast(estabaEmitido ? "Dato corregido · la v" + cx.informes(db, ref).length + " ya no vale: emite una nueva versión" : "Dato corregido");
       }, function () { ctl.cerrar(); });
     });
     ctl = cx.modal({ titulo: "Corregir: " + o.etiqueta, cuerpo: cuerpo, testid: "hoja-corregir" });
@@ -519,8 +545,8 @@
     var orden = { pendiente: 0, valorada: 1, informativa: 2 };
     var nivel = { critico: 0, revisar: 1, info: 2 };
     al.sort(function (a, b) { return (orden[a.estado] - orden[b.estado]) || ((nivel[a.nivel] || 9) - (nivel[b.nivel] || 9)) || (a.clave < b.clave ? -1 : 1); });
-    var pend = al.filter(function (a) { return a.estado === "pendiente" || a.comunicacion_pendiente; }).length;
-    panel.appendChild(h("p", { class: "cx-ayuda", text: al.length ? (pend ? pend + " por valorar o comunicar. " : "Todas valoradas. ") + "Las alertas no paran el trabajo; solo impiden emitir hasta que alguien las valora." : "Este expediente no tiene alertas." }));
+    var pp = cx.pendientes(db, ref);
+    panel.appendChild(h("p", { class: "cx-ayuda", "data-testid": "resumen-alertas", text: al.length ? (cx.textoPendientes(pp) || "Todas valoradas") + ". Las alertas no paran el trabajo; solo impiden emitir hasta que alguien las valora." : "Este expediente no tiene alertas." }));
     al.forEach(function (a) {
       var n = null;
       if (ING.ui.tarjetaAlerta) { try { n = ING.ui.tarjetaAlerta(a); } catch (e) { n = null; } }
@@ -565,7 +591,7 @@
         h("div", { class: "cx-tx-cab" }, h("span", { class: "cx-ref", text: inf.id }),
           h("span", { class: "cx-etq-version " + (vigente ? "vig" : "sus"), "data-testid": "estado-version",
             text: vigente ? "Vigente" : sust ? "Sustituida por v" + sust.version : "Caducada" })),
-        h("p", { class: "cx-tx-sub", text: "Emitido " + cx.fechaHoraCorta(inf.emitido_en) + " · " + cx.nombreRol(inf.emitido_por) + " · huella " + String(inf.huella).slice(0, 8) }),
+        h("p", { class: "cx-tx-sub", text: "Emitido " + cx.fechaHoraCorta(inf.emitido_en) + " · " + cx.nombreRol(inf.emitido_por) + " · sello " + String(inf.huella).slice(0, 8) }),
         inf.motivo ? h("p", { class: "cx-tx-sub", text: "Motivo: " + inf.motivo }) : null,
         inf.aviso_revisor ? h("p", { class: "cx-tx-sub", text: "Validado por quien registró resultados (aviso aceptado)" }) : null)));
     });

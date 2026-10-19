@@ -151,14 +151,16 @@
 .pcr-campo { display: flex; flex-direction: column; gap: 2px; font-size: .9375rem; color: var(--text-muted); min-width: 0; }
 .pcr-campo .input { color: var(--text); }
 .pcr-poc-res { min-height: 32px; }
-.pcr-previa-wrap { position: sticky; bottom: calc(var(--barra-alto) + var(--safe-b) + var(--s2)); z-index: 5; display: flex; flex-direction: column; gap: var(--s2); }
-@media (min-width: 600px) { .pcr-previa-wrap { bottom: var(--s3); } }
-.pcr-previa { box-shadow: var(--sombra); border-color: var(--border-strong); display: flex; flex-direction: column; gap: var(--s1); max-height: 46vh; overflow-y: auto; }
+/* D-4 / V-4: la vista previa va en el flujo (no fija): nunca tapa los campos */
+.pcr-previa-wrap { position: static; display: flex; flex-direction: column; gap: var(--s3); margin-top: var(--s5); }
+.pcr-previa-h { margin: 0; }
+.pcr-previa { border-color: var(--border-strong); display: flex; flex-direction: column; gap: var(--s2); }
 .pcr-previa > p { margin: 0; }
-.pcr-previa-tit { font-family: var(--f-titulo); }
 .pcr-previa-v .chip { font-size: 1.0625rem; white-space: normal; }
-.pcr-errores { margin: 0; padding-left: 1.2em; color: var(--critico); }
-.pcr-previa-wrap .btn { box-shadow: var(--sombra); }
+.pcr-errores { margin: 0; color: var(--revisar); font-weight: 500; }
+.pcr-previa-wrap .btn { min-height: 56px; }
+.pcr-llano b { font-weight: 700; }
+.pcr-llano .sec { display: block; margin-top: 2px; opacity: .9; }
 
 @media print {
   .lab-selector, .lab-tarea .btn, .btn-nueva-tanda, .lab-pcrgen { display: none !important; }
@@ -168,3 +170,8 @@
 .pcr-tanda > details, .pcr-tanda .tabla-wrap { min-width: 0; max-width: 100%; }
 .pcr-tanda .tabla-wrap { overflow-x: auto; }
 .pcr-tanda .tabla td:last-child { white-space: normal; }
+
+/* D-10: botón de la tarjeta de tarea con contorno (el macizo queda para hojas y diálogos) */
+.lab-tarea .lab-btn-tarea { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.lab-tarea .lab-btn-tarea:hover { background: var(--surface-2); filter: none; }
+.lab-tarea .lab-btn-tarea .ico { color: var(--link); }

@@ -241,7 +241,7 @@
     var guardado = ui.ls.get(clave, null);
     var abierto = guardado === null ? !!o.abierto : guardado === "1";
     var d = h("details", { class: "recuadro", testid: "recuadro-objetivo", open: abierto },
-      h("summary", null, ui.icon("info"), h("span", null, o.titulo || "Para qué sirve"), ui.icon("chevron-down", "chev")),
+      h("summary", null, ui.icon("info"), h("span", null, o.titulo || "Para qué sirve", o.resumen ? h("span", { class: "resumen-corto" }, " · " + o.resumen) : null), ui.icon("chevron-down", "chev")),
       h("dl", null,
         h("div", null, h("dt", null, "Objetivo"), h("dd", null, ui.md(o.objetivo))),
         h("div", null, h("dt", null, "Qué significa"), h("dd", null, ui.md(o.significa))),
@@ -256,19 +256,28 @@
     if (!z) { z = h("div", { id: "toasts", class: "toasts", role: "status", "aria-live": "polite" }); document.body.appendChild(z); }
     return z;
   }
+  /* Un solo aviso a la vez: el nuevo sustituye al anterior. Dura 2,5 s (4 s si lleva botón de acción).
+     No captura toques (pointer-events:none) salvo su botón; con una hoja o diálogo abierto se coloca arriba. */
+  var _toastActual = null, _toastTimer = null;
   ui.toast = function (texto, accion) {
     var z = zonaToasts();
+    if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
+    if (_toastActual && _toastActual.parentNode) _toastActual.parentNode.removeChild(_toastActual);
+    z.textContent = "";
     var t = h("div", { class: "toast", testid: "toast" }, h("span", null, texto));
-    var cerrar = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+    var cerrar = function () {
+      if (t.parentNode) t.parentNode.removeChild(t);
+      if (_toastActual === t) { _toastActual = null; if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; } }
+    };
     if (accion) {
       var etiqueta = accion.texto || accion.etiqueta || "Ver";
       var fn = accion.fn || accion.onClick || accion.accion;
       var destino = accion.hash || accion.href;
       t.appendChild(h("button", { type: "button", class: "btn-toast", onclick: function () { cerrar(); if (fn) fn(); else if (destino) ui.irA(destino); } }, etiqueta));
     }
-    while (z.children.length > 2) z.removeChild(z.firstChild);
     z.appendChild(t);
-    setTimeout(cerrar, 4000);
+    _toastActual = t;
+    _toastTimer = setTimeout(cerrar, accion ? 4000 : 2500);
     return t;
   };
 
@@ -352,10 +361,10 @@
     (cat.analisis || []).forEach(function (a) { (a.refs || []).forEach(function (x) { add(x, a.nombre, null); }); });
     (cat.plan || []).forEach(function (p) { (p.refs || []).forEach(function (x) { add(x, "Plan " + p.id, null); }); });
     (cat.dianas || []).forEach(function (d) {
-      (d.refs || []).concat(d.refs_positivo || [], d.refs_negativo || []).forEach(function (x) { add(x, "Diana " + String(d.nombre).replace(/\*/g, ""), null); });
+      (d.refs || []).concat(d.refs_positivo || [], d.refs_negativo || []).forEach(function (x) { add(x, "Diana " + String(d.nombre), null); });
     });
-    (cat.patogenos || []).forEach(function (p) { (p.refs || []).forEach(function (x) { add(x, "Patógeno " + String(p.nombre || p.id).replace(/\*/g, ""), null); }); });
-    (cat.taxones || []).forEach(function (t) { (t.refs || []).forEach(function (x) { add(x, "Taxón " + String(t.nombre_md || t.id).replace(/\*/g, ""), null); }); });
+    (cat.patogenos || []).forEach(function (p) { (p.refs || []).forEach(function (x) { add(x, "Patógeno " + String(p.nombre || p.id), null); }); });
+    (cat.taxones || []).forEach(function (t) { (t.refs || []).forEach(function (x) { add(x, "Taxón " + String(t.nombre_md || t.id), null); }); });
     Object.keys(cat).forEach(function (k) {
       var v = cat[k];
       if (Array.isArray(v) && ["reglas", "analisis", "plan", "dianas", "patogenos", "taxones"].indexOf(k) < 0) {
@@ -406,13 +415,30 @@
       meta,
       url ? h("p", null, h("a", { class: "ref-enlace", href: url, target: "_blank", rel: "noopener noreferrer", testid: "ref-enlace" }, ui.icon("external-link"), h("span", null, url.replace(/^https:\/\//, "").slice(0, 60) + (url.length > 68 ? "…" : ""))))
         : h("p", { class: "aviso", "data-tono": "revisar" }, ui.icon("triangle-alert"), h("span", null, "No verificada: se muestra sin enlace.")),
-      h("p", { class: "sec" }, h("b", null, r.verificado ? "Verificado: " : "Verificación: "), r.metodo_verificacion || "—"),
+      h("p", { class: "sec" }, h("b", null, r.verificado ? "Comprobada en: " : "Sin confirmar: "), r.verificado ? ui.dondeComprobada(r) : (r.metodo_verificacion || "—")),
       r.uso_en_app ? h("p", { class: "sec muted" }, r.uso_en_app) : null,
       usos.length ? h("div", null, h("p", { class: "sec", style: { marginBottom: "6px" } }, h("b", null, "Se usa en:")),
         h("div", { class: "chips" }, usos.map(function (u) {
-          return u.destino ? h("a", { class: "chip", "data-tono": "borde", href: u.destino, onclick: function () { ui.cerrarCapas(); } }, u.etiqueta)
-            : h("span", { class: "chip", "data-tono": "borde" }, u.etiqueta);
+          return u.destino ? h("a", { class: "chip", "data-tono": "borde", href: u.destino, onclick: function () { ui.cerrarCapas(); } }, ui.md(u.etiqueta))
+            : h("span", { class: "chip", "data-tono": "borde" }, ui.md(u.etiqueta));
         }))) : null);
+  };
+
+  /* "Comprobada en": lenguaje llano en lugar del método técnico de verificación (DIR-14) */
+  ui.dondeComprobada = function (r) {
+    var t = String((r && r.metodo_verificacion) || "") + " " + String((r && r.url) || "");
+    var donde = [];
+    if (r && r.pmid || /pubmed/i.test(t)) donde.push("PubMed");
+    if (/woah/i.test(t)) donde.push("web oficial de la WOAH");
+    if (/boe\.es|\bBOE\b/i.test(t)) donde.push("BOE");
+    if (/eur-lex|europa\.eu/i.test(t)) donde.push("EUR-Lex (Diario Oficial de la UE)");
+    if (/iso\.org/i.test(t)) donde.push("iso.org");
+    if (/clsi/i.test(t)) donde.push("web de CLSI");
+    if (/efsa/i.test(t)) donde.push("web de la EFSA");
+    if (/mapa\.gob|mapa\.es/i.test(t)) donde.push("web del Ministerio de Agricultura");
+    if (!donde.length && (r && r.doi || /doi|crossref/i.test(t))) donde.push("registro DOI de la revista");
+    if (!donde.length) return String((r && r.metodo_verificacion) || "—").replace(/\b(WebFetch|WebSearch|mcp__\w+)\b/g, "").replace(/\s{2,}/g, " ").trim() || "—";
+    return donde.filter(function (x, i) { return donde.indexOf(x) === i; }).join(" · ");
   };
 
   ui.abrirRef = function (refId) {

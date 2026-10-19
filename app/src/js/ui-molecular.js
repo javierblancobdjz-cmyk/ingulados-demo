@@ -17,7 +17,9 @@
   function plano(t) { return t == null ? "" : String(t).replace(/\*([^*]+)\*/g, "$1"); }
   function md(t) { return ui.md(t); }
   function P() { return ING.cat.parametros.pcr; }
-  function fct(x) { return x == null ? "Sin Ct" : ING.fmt.num(x, 1); }
+  function fct(x) { return x == null ? "sin amplificación" : ING.fmt.num(x, 1); }
+  /* "Sin Ct", "sin amplificación", "sin amp." … cuentan como sin amplificación */
+  var RE_SIN = /^sin( ?ct| ?amp(\.|lificaci[oó]n)?)?$/i;
   function etiquetas() { return ING.cat.parametros.etiquetas_resultado_pcr; }
   function dianaDe(a) { var c = idx().analisis[a.catalogo_id] || {}; return idx().dianas[c.diana_id] || null; }
   function etiquetaRes(r, d) {
@@ -59,14 +61,16 @@
     var poc = (t.pocillos || []).filter(function (p) { return p.analisis_id === a.id; })[0] || {};
     var fila = h("div", { class: "fila pcr-res-fila" },
       h("span", { class: "chip pcr-chip", "data-tono": TONO_RES[r], "data-resultado": r }, ui.icon(ICO_RES[r]), h("span", null, etiquetaRes(r, d))),
-      r !== "repetir" ? h("span", { class: "pcr-ct mono", title: "Ct de la diana" }, "Ct " + fct(poc.ct)) : null,
-      h("a", { class: "pcr-tanda-enl sec", href: "#/lab/molecular?tanda=" + t.id, title: "Tanda " + t.id }, t.id));
+      r !== "repetir" ? (poc.ct == null
+        ? h("span", { class: "pcr-ct sec", title: "La diana no amplificó en ningún ciclo" }, "sin amplificación")
+        : h("span", { class: "pcr-ct sec", title: "Ct: ciclo umbral en que la diana amplifica" }, h("span", { class: "mono" }, "Ct " + fct(poc.ct)), " (ciclo umbral)")) : null,
+      h("a", { class: "pcr-tanda-enl sec", href: "#/lab/molecular?tanda=" + t.id, title: "Ver la tanda " + t.id }, "tanda " + t.id));
     caja.appendChild(fila);
     if (r === "repetir") {
       var v = motor().validezTanda(db, t);
-      caja.appendChild(h("p", { class: "pcr-nota sec" }, "Tanda no válida (" + v.reglas.join(", ") + "): hay que repetirla."));
+      caja.appendChild(h("p", { class: "pcr-nota sec" }, explicaNoValida(v, t.pocillos.length) + " (" + v.reglas.join(", ") + ")"));
     } else if (r === "inhibido") {
-      caja.appendChild(h("p", { class: "pcr-nota sec" }, "Control interno " + fct(poc.ct_ci) + ": no se puede informar como negativo (PCR-04). ", ui.chipsRefs(["REF-57"])));
+      caja.appendChild(h("p", { class: "pcr-nota sec" }, (poc.ct_ci == null ? "El control interno no amplificó" : "El control interno salió tarde (Ct " + fct(poc.ct_ci) + ")") + ": la PCR pudo estar inhibida y no se puede informar como negativo (PCR-04). ", ui.chipsRefs(["REF-57"])));
     }
     if (opciones.nota !== false) {
       var n = notaDiana(db, a, r, d);
@@ -89,6 +93,15 @@
       if (r === "positivo") c.det++; else if (r === "negativo") c.nodet++; else if (r === "dudoso") c.dud++; else c.nv++;
     });
     return c;
+  }
+  /* explicación en lenguaje llano de por qué una tanda no vale (DIR-13) */
+  function explicaNoValida(v, n) {
+    var motivos = v.reglas.map(function (r) {
+      return r === "PCR-01" ? "el control que debía salir vacío ha amplificado (posible contaminación)"
+        : r === "PCR-02" ? "el blanco de extracción ha amplificado (posible contaminación en la extracción)"
+        : "el control positivo no ha salido donde debía (la reacción no es fiable)";
+    });
+    return "Esta tanda no vale: " + motivos.join("; ") + ". Hay que repetir " + (n === 1 ? "su análisis" : "sus " + n + " análisis") + ".";
   }
   function chipValidez(v) {
     if (v.valida) return h("span", { class: "chip", "data-tono": "ok", testid: "validez-tanda", "data-valida": "1" }, ui.icon("circle-check"), h("span", null, "Válida"));
@@ -124,7 +137,7 @@
         chipCtrl("CP", t.controles.cp, v.reglas.indexOf("PCR-03") >= 0),
         chipCtrl("NTC", t.controles.ntc, t.controles.ntc != null),
         chipCtrl("CEX", t.controles.cex, t.controles.cex != null)),
-      !v.valida ? h("p", { class: "aviso", "data-tono": "novalido" }, ui.icon("ban"), h("span", null, v.reglas.map(function (r) { return r + ": " + L().titRegla(r); }).join(" · "))) : null,
+      !v.valida ? h("p", { class: "aviso pcr-llano", "data-tono": "novalido", testid: "explica-no-valida" }, ui.icon("ban"), h("span", null, h("b", null, explicaNoValida(v, t.pocillos.length)), " ", h("span", { class: "sec" }, v.reglas.map(function (r) { return r + ": " + L().titRegla(r); }).join(" · ")))) : null,
       h("p", { class: "sec pcr-recuento" }, txt),
       h("details", { class: "plegable", open: !!abierta },
         h("summary", null, h("span", null, "Pocillos"), ui.icon("chevron-down", "chev")),
@@ -323,17 +336,29 @@
   function erroresTanda(b, t) {
     var e = [];
     if (t.controles.cp == null || isNaN(t.controles.cp)) e.push("Falta el Ct del control positivo (CP).");
-    if (!b.ntcSin && (t.controles.ntc == null || isNaN(t.controles.ntc))) e.push("Escribe el Ct del NTC o marca «Sin Ct».");
-    if (!b.cexSin && (t.controles.cex == null || isNaN(t.controles.cex))) e.push("Escribe el Ct del blanco de extracción o marca «Sin Ct».");
+    if (!b.ntcSin && (t.controles.ntc == null || isNaN(t.controles.ntc))) e.push("Escribe el Ct del NTC o marca «Sin amplificación».");
+    if (!b.cexSin && (t.controles.cex == null || isNaN(t.controles.cex))) e.push("Escribe el Ct del blanco de extracción o marca «Sin amplificación».");
     if (!t.pocillos.length) e.push("Incluye al menos un análisis.");
     var pn = L().parseNum;
     b.filas.forEach(function (f) {
       if (!f.incl) return;
       var corto = f.id.replace(/-pcr_\w+$/, "");
-      if (!f.sinCt && (!String(f.ct).trim() || isNaN(pn(f.ct)))) e.push("Ct de " + corto + ": escribe un número o marca «Sin Ct».");
+      if (!f.sinCt && (!String(f.ct).trim() || isNaN(pn(f.ct)))) e.push("Ct de " + corto + ": escribe un número o marca «Sin amplificación».");
       if (String(f.ci).trim() && isNaN(pn(f.ci))) e.push("Control interno de " + corto + ": no es un número.");
     });
     return e;
+  }
+
+  /* resumen corto de lo que falta: "Faltan 4 Ct · falta el CP" */
+  function resumenErrores(errs) {
+    var nCt = errs.filter(function (e) { return /^Ct de /.test(e); }).length;
+    var nCi = errs.filter(function (e) { return /^Control interno de /.test(e); }).length;
+    var otros = errs.filter(function (e) { return !/^Ct de |^Control interno de /.test(e); });
+    var partes = [];
+    if (nCt) partes.push(nCt === 1 ? "Falta 1 Ct de pocillo" : "Faltan " + nCt + " Ct de pocillos");
+    if (nCi) partes.push(nCi + (nCi === 1 ? " control interno no es un número" : " controles internos no son números"));
+    otros.forEach(function (e) { partes.push(e.replace(/\.$/, "")); });
+    return partes.join(" · ") + ". Escribe el Ct o marca «Sin amplificación».";
   }
 
   ING.rutas["lab/tanda"] = function (p) {
@@ -374,11 +399,10 @@
       var txtV = v.valida ? "Válida" : "No válida: " + v.reglas.map(function (r) {
         return r === "PCR-01" ? "el NTC amplifica (PCR-01)" : r === "PCR-02" ? "el blanco de extracción amplifica (PCR-02)" : "el control positivo está fuera de rango " + ING.fmt.num(d.cp_rango[0], 0) + "–" + ING.fmt.num(d.cp_rango[1], 0) + " (PCR-03)";
       }).join("; ");
-      previa.appendChild(h("p", { class: "pcr-previa-tit" }, h("b", null, "Vista previa")));
       previa.appendChild(h("p", { class: "pcr-previa-v", testid: "previa-validez", "data-valida": errs.length ? "" : (v.valida ? "1" : "0") },
-        errs.length ? h("span", { class: "chip", "data-tono": "pendiente" }, ui.icon("pencil"), h("span", null, "Faltan datos"))
+        errs.length ? h("span", { class: "chip", "data-tono": "pendiente" }, ui.icon("pencil"), h("span", null, "Faltan datos para valorar la tanda"))
           : h("span", { class: "chip", "data-tono": v.valida ? "ok" : "novalido" }, ui.icon(v.valida ? "circle-check" : "ban"), h("span", null, txtV))));
-      if (errs.length) previa.appendChild(h("ul", { class: "pcr-errores sec" }, errs.map(function (e) { return h("li", null, e); })));
+      if (errs.length) previa.appendChild(h("p", { class: "pcr-errores sec", testid: "previa-faltan" }, resumenErrores(errs)));
       if (!v.valida && !errs.length) previa.appendChild(h("p", { class: "sec" }, "Se registra igualmente: sus análisis pasan a «Repetir»."));
       /* resultado por pocillo */
       var resum = { };
@@ -417,19 +441,19 @@
 
     /* 2. controles */
     function campoCtrl(clave, etiqueta, testid) {
-      /* "Sin Ct" activado por defecto; escribir un Ct lo desactiva y activarlo borra el Ct */
-      var inp = h("input", { type: "text", inputmode: "decimal", class: "input pcr-ct-in", testid: testid, value: b[clave], placeholder: "Sin Ct", "aria-label": "Ct de " + etiqueta + " (opcional)" });
+      /* "Sin amplificación" activado por defecto; escribir un Ct lo desactiva y activarlo borra el Ct */
+      var inp = h("input", { type: "text", inputmode: "decimal", class: "input pcr-ct-in", testid: testid, value: b[clave], placeholder: "sin amplif.", "aria-label": "Ct de " + etiqueta + " (opcional)" });
       var chk = h("input", { type: "checkbox", checked: b[clave + "Sin"], testid: testid + "-sin" });
       chk.addEventListener("change", function () { b[clave + "Sin"] = chk.checked; if (chk.checked) { inp.value = ""; b[clave] = ""; } else inp.focus(); recalcular(); });
       inp.addEventListener("input", function () {
         b[clave] = inp.value;
-        var vacio = !inp.value.trim() || /^sin( ?ct)?$/i.test(inp.value.trim());
+        var vacio = !inp.value.trim() || RE_SIN.test(inp.value.trim());
         b[clave + "Sin"] = vacio; chk.checked = vacio;
         recalcular();
       });
       return h("div", { class: "pcr-ctrl-fila" },
         h("span", { class: "pcr-ctrl-et" }, etiqueta),
-        h("label", { class: "pcr-sinct" }, chk, h("span", null, "Sin Ct")),
+        h("label", { class: "pcr-sinct" }, chk, h("span", null, "Sin amplificación")),
         inp);
     }
     var cpIn = h("input", { type: "text", inputmode: "decimal", class: "input pcr-ct-in", testid: "ctrl-cp", value: b.cp, "aria-label": "Ct del control positivo" });
@@ -446,7 +470,7 @@
     b.filas.forEach(function (f) {
       var a = db.analisis[f.id];
       var chk = h("input", { type: "checkbox", checked: f.incl, "aria-label": "Incluir " + f.id, testid: "incl-" + f.id });
-      var ct = h("input", { type: "text", inputmode: "decimal", class: "input pcr-ct-in", testid: "ct-" + f.id, value: f.sinCt ? "" : f.ct, placeholder: "Ct o Sin Ct", "aria-label": "Ct de la diana en " + f.id });
+      var ct = h("input", { type: "text", inputmode: "decimal", class: "input pcr-ct-in", testid: "ct-" + f.id, value: f.sinCt ? "" : f.ct, placeholder: "Ct", "aria-label": "Ct de la diana en " + f.id });
       var sin = h("input", { type: "checkbox", checked: f.sinCt, testid: "sinct-" + f.id });
       var ci = h("input", { type: "text", inputmode: "decimal", class: "input pcr-ct-in", testid: "ctci-" + f.id, value: f.ci, "aria-label": "Ct del control interno en " + f.id });
       var res = h("div", { class: "pcr-poc-res" });
@@ -455,7 +479,7 @@
       chk.addEventListener("change", function () { f.incl = chk.checked; pintarPos(); recalcular(); });
       ct.addEventListener("input", function () {
         var v = ct.value.trim();
-        if (/^sin( ?ct)?$/i.test(v)) { f.sinCt = true; f.ct = ""; sin.checked = true; }
+        if (RE_SIN.test(v)) { f.sinCt = true; f.ct = ""; sin.checked = true; }
         else { f.ct = ct.value; if (v) { f.sinCt = false; sin.checked = false; } }
         recalcular();
       });
@@ -470,7 +494,7 @@
         h("p", { class: "sec muted pcr-poc-m" }, a ? L().describirMuestra(db, a.muestra_id) : ""),
         h("div", { class: "pcr-poc-campos" },
           h("label", { class: "pcr-campo" }, h("span", null, "Ct diana"), ct),
-          h("label", { class: "pcr-sinct" }, sin, h("span", null, "Sin Ct")),
+          h("label", { class: "pcr-sinct" }, sin, h("span", null, "Sin amplificación")),
           h("label", { class: "pcr-campo" }, h("span", null, "Ct CI"), ci)),
         res));
       if (f.incl) incluidos++;
@@ -486,7 +510,7 @@
       tbody));
 
     /* 4. vista previa + registrar */
-    cont.appendChild(h("div", { class: "pcr-previa-wrap" }, previa, btnReg));
+    cont.appendChild(h("section", { class: "pcr-previa-wrap" }, h("h2", { class: "seccion pcr-previa-h" }, "4 · Vista previa y registro"), previa, btnReg));
     btnReg.addEventListener("click", function () {
       if (btnReg.disabled) return;
       var t = btnReg._tanda, v = btnReg._valida;

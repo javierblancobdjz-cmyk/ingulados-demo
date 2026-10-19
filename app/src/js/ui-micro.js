@@ -534,7 +534,7 @@
       falta === "aislado" ? h("p", { class: "aviso", "data-tono": "revisar" }, ui.icon("triangle-alert"), h("span", null, "Falta registrar el aislado")) : null,
       falta === "antibiograma" ? h("p", { class: "aviso", "data-tono": "revisar" }, ui.icon("triangle-alert"), h("span", null, "Pendiente de antibiograma")) : null,
       h("p", { class: "sec " + (tarde ? "lab-tarde" : "muted") }, ui.icon("clock"), " " + pedido + (cat.tat_dias != null ? " · plazo orientativo " + cat.tat_dias + (cat.tat_dias === 1 ? " día" : " días") : "")),
-      h("button", { type: "button", class: "btn btn-bloque", testid: "btn-registrar", onclick: function () { ui.abrirRegistrarMicro(a.id); } },
+      h("button", { type: "button", class: "btn btn-sec btn-bloque lab-btn-tarea", testid: "btn-registrar", onclick: function () { ui.abrirRegistrarMicro(a.id); } },
         ui.icon("pencil"), h("span", null, "Registrar resultado")));
   }
 

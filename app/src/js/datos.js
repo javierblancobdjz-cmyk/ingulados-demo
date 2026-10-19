@@ -78,7 +78,7 @@
     var n = Number(x);
     return num(n, 1) + (n === 1 ? " día" : " días");
   }
-  function ct(x) { return x == null ? "Sin Ct" : num(x, 1); }
+  function ct(x) { return x == null ? "sin amplificación" : num(x, 1); }
   function huellaCorta(h) { return h ? String(h).slice(0, 8) : ""; }
   function pct(x) { return x == null ? "—" : num(x, 0) + " %"; }
 

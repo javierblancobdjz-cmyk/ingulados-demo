@@ -107,7 +107,7 @@ a.cx-tarjeta:hover { border-color: var(--border-strong); }
 .cx-chip-estado { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 2px 12px; border-radius: var(--r-pill); font-size: 1rem; font-weight: 500; white-space: nowrap; }
 
 /* ---------- #/nueva ---------- */
-.cx-entrada { padding-bottom: 96px; }
+.cx-entrada { padding-bottom: calc(96px + var(--barra-alto)); }
 .cx-entrada-cab { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; }
 .cx-entrada-cab .cx-h1 { margin: 0; }
 .cx-pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: var(--s3) 0 var(--s1); }
@@ -120,8 +120,9 @@ a.cx-tarjeta:hover { border-color: var(--border-strong); }
 .cx-mas-datos { border: 1px solid var(--border); border-radius: var(--r-tarjeta); padding: 0 var(--s4); margin: 0 0 var(--s4); background: var(--surface); }
 .cx-mas-datos > summary { min-height: 56px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; font-weight: 700; list-style: none; }
 .cx-mas-datos > summary::-webkit-details-marker { display: none; }
-.cx-mas-datos > summary::before { content: "+ "; }
-.cx-mas-datos[open] > summary::before { content: "− "; }
+.cx-mas-tit { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); color: var(--link); }
+.cx-mas-tit .ico, .cx-mas-tit .cx-ico { transition: transform var(--dur) ease-out; }
+.cx-mas-datos[open] .cx-mas-tit .ico, .cx-mas-datos[open] .cx-mas-tit .cx-ico { transform: rotate(180deg); }
 .cx-mas-datos > summary .cx-ayuda { font-weight: 400; font-size: 1rem; }
 .cx-mas-datos[open] { padding-bottom: var(--s3); }
 .cx-muestra-form.rechazada { border-color: var(--novalido); background: var(--novalido-bg); }
@@ -183,12 +184,20 @@ a.cx-tarjeta:hover { border-color: var(--border-strong); }
 .cx-prog-dep strong { font-size: 1.25rem; }
 .cx-tabs {
   display: flex; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  border-bottom: 1px solid var(--border); margin: 0 calc(-1 * var(--s4)) var(--s4); padding: 0 var(--s4);
-  position: sticky; top: calc(var(--cab-alto) + var(--banda-alto)); background: var(--bg); z-index: 5;
+  border-bottom: 1px solid var(--border); padding: 0 var(--s4);
 }
 .cx-tabs::-webkit-scrollbar { display: none; }
+.cx-tabs-caja { position: sticky; top: calc(var(--cab-alto) + var(--banda-alto)); z-index: 5; background: var(--bg); margin: 0 calc(-1 * var(--s4)) var(--s4); }
+.cx-tabs-caja.hay-mas::after {
+  content: ""; position: absolute; right: 0; top: 0; bottom: 1px; width: 48px; pointer-events: none; z-index: 6;
+  background: linear-gradient(90deg, transparent, var(--bg) 80%);
+}
+.cx-tabs-caja.hay-mas::before {
+  content: "›"; position: absolute; right: 6px; top: 50%; transform: translateY(-50%); z-index: 7; pointer-events: none;
+  color: var(--text-muted); font-size: 1.75rem; font-weight: 700; line-height: 1;
+}
 .cx-tab {
-  flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 52px; padding: 0 var(--s3);
+  flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 52px; padding: 0 10px; font-size: 1.125rem;
   color: var(--text-muted); text-decoration: none; font-weight: 500; border-bottom: 4px solid transparent;
 }
 .cx-tab.on { color: var(--text); font-weight: 700; border-bottom-color: var(--accent); }
@@ -280,3 +289,12 @@ a.cx-tarjeta:hover { border-color: var(--border-strong); }
 .cx-modal-cab { display: flex; align-items: center; gap: var(--s2); padding: var(--s3) 0; border-bottom: 1px solid var(--border); margin-bottom: var(--s3); }
 .cx-modal-titulo { flex: 1; margin: 0; font-size: 1.25rem; min-width: 0; overflow-wrap: anywhere; }
 .cx-bloque { display: block; width: 100%; }
+
+/* ---- ronda de correcciones */
+.cx-chip-enlace { display: inline-flex; text-decoration: none; border-radius: var(--r-pill); min-height: 44px; align-items: center; }
+.cx-chip-enlace:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.cx-chip-enlace .chip, .cx-chip-enlace .cx-chip-estado { cursor: pointer; }
+.cx-chip-enlace .chip::after { content: "›"; font-weight: 700; margin-left: 2px; }
+.cx-banda-caducada p { margin: 0; }
+.cx-banda-caducada .cx-sello-detalle { margin-top: var(--s1); }
+.cx-sello-detalle { color: var(--text-muted); font-size: .9375rem; font-variant-numeric: tabular-nums; }

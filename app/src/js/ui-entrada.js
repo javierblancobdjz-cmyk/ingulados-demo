@@ -113,7 +113,7 @@
     var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso || "");
     return m ? m[3] + "-" + m[2] + " " + m[4] + ":" + m[5] : "";
   };
-  cx.ct = function (v) { return v == null || v === "" ? "Sin Ct" : Number(v).toFixed(1).replace(".", ","); };
+  cx.ct = function (v) { return v == null || v === "" ? "sin amplificación" : Number(v).toFixed(1).replace(".", ","); };
   cx.deExp = function (db, col, ref) {
     var out = [], c = db[col] || {};
     Object.keys(c).forEach(function (k) { if (c[k] && c[k].expediente_id === ref) out.push(c[k]); });
@@ -227,7 +227,7 @@
         type: "button", role: "radio", class: "cx-chip" + (op.id === o.valor ? " on" : ""),
         "aria-checked": op.id === o.valor ? "true" : "false", "data-testid": o.testid ? o.testid + "-" + op.id : null,
         "data-valor": op.id, onclick: function () { o.onchange(op.id); }
-      }, op.id === o.valor ? cx.icon("check") : null, h("span", { text: cx.plano(op.nombre) }));
+      }, op.id === o.valor ? cx.icon("check") : null, h("span", { text: cx.plano(op.nombre).replace(/(\d) (h|°C)\b/g, "$1\u00a0$2") }));
       g.appendChild(b);
     });
     return g;
@@ -351,7 +351,7 @@
     raiz.appendChild(h("div", { class: "cx-entrada-cab" },
       h("h1", { id: "cx-entrada-titulo", class: "cx-h1", text: "Nueva entrada" }),
       tieneDatos(B) ? h("button", { type: "button", class: "cx-btn-texto", "data-testid": "btn-descartar", text: "Empezar de cero",
-        onclick: function () { B = borradorNuevo(); errores = {}; borrarBorrador(); pintar(); } }) : null));
+        onclick: confirmarDescartar }) : null));
     var prog = h("div", { class: "cx-pasos", role: "progressbar", "aria-valuemin": "1", "aria-valuemax": "3", "aria-valuenow": String(B.paso),
       "aria-label": "Paso " + B.paso + " de 3" });
     for (var i = 1; i <= 3; i++) prog.appendChild(h("span", { class: "cx-paso-seg" + (i <= B.paso ? " on" : "") }));
@@ -405,7 +405,7 @@
     var det = h("details", { class: "cx-mas-datos" });
     if (B.masAbierto) det.open = true;
     det.addEventListener("toggle", function () { B.masAbierto = det.open; guardarBorrador(); });
-    det.appendChild(h("summary", null, h("span", { text: "Más datos" }),
+    det.appendChild(h("summary", null, h("span", { class: "cx-mas-tit" }, h("span", { text: "Más datos (opcional)" }), cx.icon("chevron-down")),
       h("span", { class: "cx-ayuda", text: resumenMas() })));
     var sig = h("div", { class: "cx-chips", role: "group", "aria-label": "Signos clínicos y lesiones" });
     ING.cat.signos.forEach(function (sg) {
@@ -427,6 +427,16 @@
     det.appendChild(cx.campo("Observaciones", ob));
     s.appendChild(det);
     return s;
+  }
+  function confirmarDescartar() {
+    var cuerpo = h("div", { class: "cx-form-hoja" },
+      h("p", { text: "Se borra lo que llevas escrito en esta entrada (procedencia, muestras y análisis). No afecta a nada registrado." }));
+    var si = h("button", { type: "button", class: "cx-btn cx-primario cx-btn-grande", "data-testid": "btn-confirmar-descartar", text: "Sí, empezar de cero" });
+    var no = h("button", { type: "button", class: "cx-btn cx-btn-grande", "data-testid": "btn-cancelar-descartar", text: "Seguir con esta" });
+    cuerpo.appendChild(h("div", { class: "cx-fila-botones cx-botones-dialogo" }, no, si));
+    var ctl = cx.modal({ titulo: "¿Empezar de cero?", cuerpo: cuerpo, testid: "dialogo-descartar", tipo: "dialogo" });
+    no.addEventListener("click", function () { ctl.cerrar(); });
+    si.addEventListener("click", function () { ctl.cerrar(); B = borradorNuevo(); errores = {}; borrarBorrador(); pintar(); scrollArriba(); });
   }
   function resumenMas() {
     var p = [];

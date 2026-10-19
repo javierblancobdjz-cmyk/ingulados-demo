@@ -10,7 +10,7 @@
 
   var TXT_RECUADRO = {
     objetivo: "que nada salga sin la autorización de una persona.",
-    significa: "solo se puede emitir un expediente con todo analizado y todas las alertas valoradas. La autorización queda ligada a una versión y a su huella.",
+    significa: "solo se puede emitir un expediente con todo analizado y todas las alertas valoradas. Lo que se emite queda sellado: si después cambia un dato, el sello deja de valer y se emite una v2.",
     comoSeLee: "“Listos para validar” se pueden emitir ya; “Pendientes de valoración” esperan a que alguien revise sus alertas."
   };
   function mayus(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
@@ -91,7 +91,7 @@
         h("span", { class: "cx-ref", text: inf.expediente_id }),
         h("span", { class: "cx-etq-version", text: "v" + inf.version }),
         h("span", { class: "cx-tx-sub", text: cx.fechaHoraCorta(inf.emitido_en) }),
-        h("span", { class: "cx-mono cx-huella-corta", text: String(inf.huella).slice(0, 8) }))));
+        h("span", { class: "cx-mono cx-huella-corta", text: "sello " + String(inf.huella).slice(0, 8) }))));
     });
     g3.appendChild(ul3);
     if (emit.length > 10) g3.appendChild(h("button", { type: "button", class: "cx-btn cx-btn-texto", "data-testid": "btn-ver-todos",
@@ -135,9 +135,11 @@
     var huella = ING.motor.huella(db, ref);
     var aviso = rolRegistroResultados(db, ref, rol);
     var cuerpo = h("div", { class: "cx-form-hoja cx-emision" });
-    cuerpo.appendChild(h("p", { text: "Quedará registrado a nombre de " + cx.nombreRol(rol) + ", con la huella " + huella.slice(0, 4) + "…. " +
-      "Si después cambia algún dato, esta validación caduca y habrá que emitir una nueva versión." }));
-    cuerpo.appendChild(h("p", { class: "cx-huella-dialogo" }, h("span", { class: "cx-ayuda", text: "Huella SHA-256 " }), h("span", { class: "cx-mono", text: huella.slice(0, 8) })));
+    if (v > 1) cuerpo.appendChild(h("p", { class: "cx-v-sustituye", "data-testid": "emision-sustituye", text: "v" + v + " · sustituye a v" + (v - 1) }));
+    cuerpo.appendChild(h("p", null, h("span", { text: "Lo que emites queda " }), h("strong", { text: "sellado" }),
+      h("span", { text: ": si después se cambia cualquier dato, este sello deja de valer y habrá que emitir una versión nueva (v" + (v + 1) + ")." })));
+    cuerpo.appendChild(h("p", { text: "Quedará registrado a nombre de " + cx.nombreRol(rol) + "." }));
+    cuerpo.appendChild(h("p", { class: "cx-sello-detalle", "data-testid": "emision-sello", text: "Sello de esta versión: " + huella.slice(0, 8) }));
     if (aviso) {
       cuerpo.appendChild(h("div", { class: "cx-aviso cx-aviso-revisar", role: "note", "data-testid": "aviso-revisor" },
         cx.icon("users-round"),
@@ -178,7 +180,7 @@
         emitiendo = false;
         recien = { id: id2, t: Date.now() };
         ctl.cerrar();
-        cx.toast("Informe " + id2 + " emitido (simulación)");
+        cx.toast("Informe " + id2 + " emitido (simulación)");  /* un solo aviso: el toast; en la página solo el check animado */
         cx.irA("#/informe/" + id2);
       }, function () { emitiendo = false; btnEmitir.disabled = false; cx.toast("No se ha podido emitir. Inténtalo de nuevo."); });
     });
@@ -212,7 +214,7 @@
     var t = h("table", { class: "cx-tabla " + (cls || "") });
     t.appendChild(h("thead", null, h("tr", null, cab.map(function (c) { return h("th", { scope: "col", text: c }); }))));
     var tb = h("tbody");
-    filas.forEach(function (f) { tb.appendChild(h("tr", null, f.map(function (c) { return h("td", null, c); }))); });
+    filas.forEach(function (f) { tb.appendChild(h("tr", null, f.map(function (c, i) { return h("td", { "data-etq": cab[i] }, c); }))); });
     t.appendChild(tb);
     return h("div", { class: "cx-tabla-wrap" }, t);
   }
@@ -240,17 +242,15 @@
       h("button", { type: "button", class: "cx-btn cx-primario cx-btn-grande", "data-testid": "btn-imprimir",
         onclick: function () { try { root.print(); } catch (e) { cx.toast("Este navegador no permite imprimir desde aquí."); } } },
         cx.icon("printer"), h("span", { text: "Imprimir / Guardar PDF" }))));
-    if (recien && recien.id === inf.id && Date.now() - recien.t < 6000) {
-      vista.appendChild(h("p", { class: "cx-emitido-ok no-print", role: "status" }, h("span", { class: "cx-check-anim", "aria-hidden": "true" }, cx.icon("circle-check")),
-        h("span", { text: "Emitido en simulación · " + inf.id })));
-    }
+    var recienEmitido = !!(recien && recien.id === inf.id && Date.now() - recien.t < 6000);
 
     var doc = h("article", { class: "cx-informe", "data-testid": "informe", "data-informe": inf.id, "aria-label": "Informe " + inf.id });
     doc.appendChild(marcaAgua());
     /* 1 · cabecera */
     doc.appendChild(h("header", { class: "cx-inf-cab" },
       h("p", { class: "cx-inf-tipo", text: "Informe de ensayo (demostración)" }),
-      h("h1", { class: "cx-inf-id" }, h("span", { text: "INF-" + ref + "-" }), h("span", { "data-testid": "informe-version", text: "v" + inf.version })),
+      h("h1", { class: "cx-inf-id" }, h("span", { text: "INF-" + ref + "-" }), h("span", { "data-testid": "informe-version", text: "v" + inf.version }),
+        recienEmitido ? h("span", { class: "cx-check-anim no-print", "aria-hidden": "true" }, cx.icon("circle-check")) : null),
       h("p", { class: "cx-inf-lab", text: "Laboratorio: prototipo de demostración preparado para Ingulados" }),
       h("p", { class: "cx-inf-sim", text: "Emitido en modo simulación · " + cx.fechaHora(inf.emitido_en) })));
     /* 2 · versión */
@@ -294,11 +294,10 @@
     var filasM = mus.map(function (m) {
       var est = recepcionSnap(m);
       if (est === "ACEPTADA_CON_DESVIACION") hayDesv = true;
-      return [h("span", { class: "cx-mono", text: m[0].slice(ref.length + 1) }), (ING.idx.especies[m[1]] || {}).nombre || m[1],
+      return [h("span", { class: "cx-mono cx-nowrap", text: m[0] }), (ING.idx.especies[m[1]] || {}).nombre || m[1],
         (ING.idx.tiposMuestra[m[2]] || {}).nombre || m[2], m[3] || "—", cx.TXT_MUESTRA[est] + (est !== "RECHAZADA" ? " · " + ((ING.idx.conservaciones[m[4]] || {}).nombre || m[4]) : "")];
     });
     var secM = seccion("Muestras", tabla(["Código", "Especie", "Tipo", "Identificación", "Recepción"], filasM, "cx-tabla-muestras"));
-    secM.appendChild(h("p", { class: "cx-inf-nota", text: "Código completo: " + ref + "-Mnn." }));
     if (hayDesv) secM.appendChild(h("p", { class: "cx-inf-salvedad", "data-testid": "salvedad-rec01",
       text: "Muestra recibida fuera de condiciones (REC-01); el resultado se refiere a la muestra tal como se recibió." }));
     doc.appendChild(secM);
@@ -320,7 +319,7 @@
         else {
           var op = (c.opciones_resultado || []).filter(function (o) { return o.id === x.val; })[0];
           if (op && op.patogeno_id) patogenosDet[op.patogeno_id] = 1;
-          filas.push([cx.md(c.nombre), h("span", { text: c.metodo || "" }), op ? cx.md(op.nombre) : h("span", { text: "Pendiente" })]);
+          filas.push([cx.md(c.nombre), cx.md(c.metodo || ""), op ? cx.md(op.nombre) : h("span", { text: "Pendiente" })]);
         }
       });
       if (filas.length) bloque.appendChild(tabla(["Análisis", "Método", "Resultado"], filas, "cx-tabla-res"));
@@ -391,7 +390,8 @@
     /* 9 · autorización */
     doc.appendChild(h("section", { class: "cx-inf-sec cx-inf-autorizacion" },
       h("h2", { class: "cx-inf-h2", text: "Autorización" }),
-      h("p", { text: "Registro de autorización: " + cx.usuarioRol(inf.emitido_por) + " (rol de la demo) · " + cx.fechaHora(inf.emitido_en) + " · huella SHA-256" }),
+      h("p", { text: "Registro de autorización: " + cx.usuarioRol(inf.emitido_por) + " (rol de la demo) · " + cx.fechaHora(inf.emitido_en) }),
+      h("p", { class: "cx-sello-tit", text: "Sello de la versión (SHA-256). Si cambia cualquier dato del informe, el sello deja de coincidir:" }),
       h("p", { class: "cx-mono cx-huella-larga", "data-testid": "informe-huella", text: inf.huella }),
       inf.aviso_revisor ? h("p", { class: "cx-inf-aviso-rev", "data-testid": "informe-aviso-revisor", text: "Validado por la misma persona que registró resultados (aviso aceptado)" }) : null,
       h("p", { class: "cx-inf-nota", text: "Sin identidad verificada: la demo registra qué rol pulsa «Validar y emitir»." })));
@@ -417,8 +417,8 @@
     if (r === "negativo" && cx.notaNegAplica(d, m[1])) di.neg = true;
     var et = r === "pendiente" ? "Pendiente" : cx.etiquetaPCR(d, r);
     return [h("span", null, cx.md(d.nombre || c.nombre), h("span", { class: "cx-inf-gen", text: " (" + (d.gen || "") + ")" })),
-      h("span", { text: c.metodo || "" }),
-      h("span", null, h("strong", { text: et }), r !== "pendiente" ? h("span", { class: "cx-mono", text: " · Ct " + (ct ? ct.replace(".", ",") : "sin Ct") + " · tanda " + tanda }) : null)];
+      cx.md(c.metodo || ""),
+      h("span", null, h("strong", { text: et }), r !== "pendiente" ? h("span", { class: "cx-inf-ct", text: (ct ? " · Ct " + ct.replace(".", ",") : " · sin amplificación") + " · tanda " + tanda }) : null)];
   }
 
   ING.rutas.informes = vistaInformes;

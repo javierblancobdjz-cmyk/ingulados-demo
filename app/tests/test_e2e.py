@@ -59,9 +59,31 @@ def T(sel):
     return f'[data-testid="{sel}"]'
 
 
+# Registra el texto de cada toast que aparece (los toasts son únicos y duran poco: no se leen a destiempo)
+REGISTRA_TOASTS = """
+(() => {
+  window.__toasts = [];
+  const ver = (n) => { if (n.nodeType === 1) { const t = n.matches && n.matches('[data-testid=toast]') ? [n] : [...n.querySelectorAll ? n.querySelectorAll('[data-testid=toast]') : []];
+    t.forEach(x => setTimeout(() => window.__toasts.push(x.innerText || x.textContent || ''), 0)); } };
+  new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(ver))).observe(document, { childList: true, subtree: true });
+})();
+"""
+
+
+def toasts(pg, desde=0):
+    """Textos de los toasts aparecidos desde el índice `desde` (por defecto, todos)."""
+    pg.wait_for_timeout(150)
+    return " | ".join(pg.evaluate("window.__toasts || []")[desde:])
+
+
+def n_toasts(pg):
+    return pg.evaluate("(window.__toasts || []).length")
+
+
 def nuevo_contexto(b, oscuro=False):
     ctx = b.new_context(viewport={"width": 390, "height": 844}, device_scale_factor=3, is_mobile=True, has_touch=True,
                         locale="es-ES", timezone_id="Europe/Madrid", color_scheme="dark" if oscuro else "light")
+    ctx.add_init_script(REGISTRA_TOASTS)
     pg = ctx.new_page()
     pg.on("pageerror", lambda e: ERRS.append(f"pageerror: {e}"))
     pg.on("console", lambda m: ERRS.append(f"console.error: {m.text}") if m.type == "error" and "manifest" not in m.text.lower() else None)
@@ -117,6 +139,9 @@ def g1(pg, base):
     check("badge-lab 15", pg.inner_text(T("badge-lab")).strip() == "15", pg.inner_text(T("badge-lab")))
     check("badge-informes 5", pg.inner_text(T("badge-informes")).strip() == "5", pg.inner_text(T("badge-informes")))
     check("6 gráficas en Inicio", pg.locator('[data-testid^="grafica-g"]').count() == 6)
+    check("tira-circuito en Inicio", pg.locator(T("tira-circuito")).count() == 1)
+    nlis = pg.evaluate("""(()=>{const o={};document.querySelectorAll('[data-testid^="circuito-"]').forEach(e=>{const m=(e.innerText||'').match(/\\d+/);o[e.dataset.testid.slice(9)]=m?+m[0]:null});return o})()""")
+    check("tira del circuito con nº por paso (3·3·2·5·38)", nlis.get("RECIBIDO") == 3 and nlis.get("EN_ANALISIS") == 3 and nlis.get("PENDIENTE_VALORACION") == 2 and nlis.get("LISTO_PARA_VALIDAR") == 5 and nlis.get("EMITIDO") == 38, str(nlis))
     captura(pg, "01_panel")
     pg.locator(T("chip-ref")).first.click()
     expect(pg.locator(T("hoja-ref"))).to_be_visible()
@@ -128,7 +153,12 @@ def g1(pg, base):
 @paso("0:40 · Nueva entrada de montería (C1-C3)")
 def g2(pg, base):
     ir(pg, base, "#/inicio")
-    pg.click(T("fab-nueva"))
+    fab = pg.locator(T("fab-nueva"))
+    etiqueta = (fab.get_attribute("aria-label") or "") + (fab.get_attribute("title") or "") + fab.inner_text()
+    check("FAB con nombre accesible 'Nueva entrada'", "Nueva entrada" in etiqueta, etiqueta[:60])
+    bb = fab.bounding_box()
+    check("FAB ≥ 48×48 px", bb and bb["width"] >= 48 and bb["height"] >= 48, str(bb))
+    fab.click()
     expect(pg.locator(T("paso-1"))).to_be_visible()
     if pg.locator(T("btn-descartar")).count():
         pg.click(T("btn-descartar"))
@@ -156,7 +186,7 @@ def g2(pg, base):
     check("C3 ficha ING-26-0353 en RECIBIDO", True)
     check("C3 progreso-micro 0/3", pg.inner_text(T("progreso-micro")).strip().endswith("0/3"), pg.inner_text(T("progreso-micro")))
     check("C3 progreso-molecular 0/3", pg.inner_text(T("progreso-molecular")).strip().endswith("0/3"), pg.inner_text(T("progreso-molecular")))
-    check("C3 toast con ING-26-0353", "ING-26-0353" in pg.inner_text("#toasts"), pg.inner_text("#toasts").replace("\n", " "))
+    check("C3 toast con ING-26-0353", "ING-26-0353" in toasts(pg), toasts(pg).replace("\n", " ")[-160:])
 
 
 @paso("1:40 · Ficha ING-26-0351 (C6, C8)")
@@ -177,6 +207,8 @@ def g3(pg, base):
     check("C8 M01 'Compatible' Ct 33,2 'no oficial'", "Compatible" in m01 and "33,2" in m01 and "no oficial" in m01, m01.replace("\n", " ")[:120])
     m03 = pg.locator(T("resultado-pcr") + '[data-analisis="ING-26-0351-M03-pcr_mtbc"]').inner_text()
     check("C8 M03 'No valorable (inhibición)'", "No valorable (inhibición)" in m03)
+    m02 = pg.locator(T("resultado-pcr") + '[data-analisis="ING-26-0351-M02-pcr_mtbc"]').inner_text()
+    check("PCR negativa en llano: 'sin amplificación' y nunca 'Ct Sin Ct'", "sin amplificación" in m02 and "Ct Sin Ct" not in m02, m02.replace("\n", " ")[:100])
     check("C8 un QR <svg> por muestra", pg.locator(T("qr-muestra") + " svg, svg" + T("qr-muestra")).count() >= 4)
     captura(pg, "03_ficha_muestras")
     sin_scroll_h(pg, "ficha · Muestras")
@@ -193,11 +225,12 @@ def g4(pg, base):
     orden = pg.evaluate("""(()=>{const db=ING.store.db();return [...document.querySelectorAll('[data-testid=tarea-micro]')].map(x=>db.analisis[x.dataset.analisis].solicitado_en)})()""")
     check("D1 ordenadas de más antigua a más reciente", orden == sorted(orden))
     captura(pg, "04_micro")
+    n0 = n_toasts(pg)
     pg.click(T("tarea-micro") + '[data-analisis="ING-26-0351-M01-cult_piogenos"] ' + T("btn-registrar"))
     pg.click(T("opcion-sin_crecimiento"))
     pg.click(T("btn-guardar"))
-    expect(pg.locator(T("toast")).last).to_be_visible()
     pg.wait_for_timeout(250)
+    check("D2 toast al guardar", "guardado" in toasts(pg, n0).lower(), toasts(pg, n0)[-80:])
     n = pg.locator(T("tarea-micro")).count()
     check("D2 la tarea desaparece (quedan 12 = 9 de la semilla + 3)", n == 12 and pg.locator(T("tarea-micro") + '[data-analisis="ING-26-0351-M01-cult_piogenos"]').count() == 0, str(n))
     ir(pg, base, "#/exp/ING-26-0351")
@@ -236,6 +269,7 @@ def g6(pg, base):
     pg.click(T("btn-emitir") + '[data-ref="ING-26-0351"]')
     expect(pg.locator(T("dialogo-emision"))).to_be_visible()
     check("C9 aviso-revisor visible", pg.locator(T("aviso-revisor")).is_visible())
+    check("C9 el diálogo habla de 'sello'", "sello" in pg.inner_text(T("dialogo-emision")).lower())
     captura(pg, "06_dialogo_emision")
     pg.click(T("btn-confirmar-emision"))
     expect(pg).to_have_url(re.compile(r"#/informe/INF-ING-26-0351-v1"))
@@ -259,7 +293,9 @@ def g7(pg, base):
     pg.click(T("btn-guardar-correccion"))
     expect(pg.locator(T("ficha-estado"))).to_have_attribute("data-estado", "LISTO_PARA_VALIDAR")
     check("C10 ficha vuelve a LISTO_PARA_VALIDAR", True)
-    check("C10 banda-caducada visible", pg.locator(T("banda-caducada")).first.is_visible())
+    banda = pg.locator(T("banda-caducada")).first
+    check("C10 banda-caducada visible", banda.is_visible())
+    check("C10 banda en llano: 'Se ha cambiado un dato después de emitir'", "Se ha cambiado un dato después de emitir" in banda.inner_text(), banda.inner_text()[:120])
     h2 = pg.evaluate("ING.motor.huella(ING.store.db(),'ING-26-0351')")
     check("A6 huella distinta tras corregir", h1 != h2, f"{h1[:8]} → {h2[:8]}")
     captura(pg, "08_caducada")
@@ -280,7 +316,7 @@ def g8(pg, base):
     ir(pg, base, "#/mas/registro")
     pg.click(T("btn-verificar"))
     r = pg.inner_text(T("resultado-verificacion"))
-    check("Verificar integridad muestra la cadena", "eventos" in r, r.replace("\n", " ")[:120])
+    check("Verificar integridad: 'Cadena correcta'", "Cadena correcta" in r and "eventos" in r, r.replace("\n", " ")[:120])
     ir(pg, base, "#/mas/sobre")
     t = pg.inner_text("#contenido")
     check("Sobre: 'datos ficticios', 'No comunica nada', 'Fase siguiente'", "datos ficticios" in t.lower() and "No comunica nada" in t and "Fase siguiente" in t)
@@ -309,8 +345,9 @@ def d34(pg, base):
     captura(pg, "d3_antibiograma")
     pg.click(T("btn-guardar"))
     pg.wait_for_timeout(400)
-    toasts = pg.inner_text("#toasts")
-    check("D3 toast con 'Multirresistencia (MDR)'", "Multirresistencia (MDR)" in toasts, toasts.replace("\n", " ")[:160])
+    tt = toasts(pg)
+    check("D3 toast con 'Multirresistencia (MDR)'", "Multirresistencia (MDR)" in tt, tt.replace("\n", " ")[-200:])
+    check("un único toast a la vez", pg.locator(T("toast")).count() <= 1, str(pg.locator(T("toast")).count()))
     check("D3 aislado ING-26-0350-M01-A01 creado", pg.evaluate("!!ING.store.db().aislados['ING-26-0350-M01-A01']"))
     expect(pg.locator(T("btn-pcr-gen")).first).to_be_visible()
     check("D4 btn-pcr-gen visible", True)
@@ -339,7 +376,7 @@ def d57(pg, base):
     sin_scroll_h(pg, "Biología molecular")
     pg.click(T("btn-nueva-tanda") + '[data-diana="adv"]')
     expect(pg.locator(T("ctrl-cp"))).to_be_visible()
-    for aid, ct in [("ING-26-0340-M01-pcr_adv", "27,4"), ("ING-26-0340-M02-pcr_adv", "31,9"), ("ING-26-0340-M03-pcr_adv", "Sin Ct"), ("ING-26-0340-M04-pcr_adv", "Sin Ct")]:
+    for aid, ct in [("ING-26-0340-M01-pcr_adv", "27,4"), ("ING-26-0340-M02-pcr_adv", "31,9"), ("ING-26-0340-M03-pcr_adv", "sin amplificación"), ("ING-26-0340-M04-pcr_adv", "Sin Ct")]:
         pg.fill(T(f"ct-{aid}"), ct)
         pg.fill(T(f"ctci-{aid}"), "29,0")
     pg.fill(T("ctrl-cp"), "26,5")
@@ -355,7 +392,7 @@ def d57(pg, base):
     expect(pg).to_have_url(re.compile(r"#/lab/molecular"))
     est = pg.evaluate("ING.motor.estadoExpediente(ING.store.db(),'ING-26-0340')")
     check("D6 ING-26-0340 en LISTO o PENDIENTE_VALORACION", est in ("LISTO_PARA_VALIDAR", "PENDIENTE_VALORACION"), est)
-    check("toast 'Tanda T-2026-085 registrada · Válida'", "Tanda T-2026-085 registrada · Válida" in pg.inner_text("#toasts"))
+    check("toast 'Tanda T-2026-085 registrada · Válida'", "Tanda T-2026-085 registrada · Válida" in toasts(pg))
     # D7: tanda no válida para la PCR del gen pendiente (mec, de la semilla)
     ir(pg, base, "#/lab/tanda?diana=mec")
     aid = "ING-26-0342-M01-A01-pcr_mec"
@@ -367,7 +404,7 @@ def d57(pg, base):
     expect(pg).to_have_url(re.compile(r"#/lab/molecular"))
     st = pg.evaluate(f"ING.motor.estadoAnalisis(ING.store.db(), ING.store.db().analisis['{aid}'])")
     check("D7 sus análisis siguen en 'Repetir'", st == "REPETIR", st)
-    check("toast '… · No válida (PCR-01)'", "No válida (PCR-01)" in pg.inner_text("#toasts"))
+    check("toast '… · No válida (PCR-01)'", "No válida (PCR-01)" in toasts(pg))
 
 
 def main():

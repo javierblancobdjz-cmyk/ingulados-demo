@@ -99,7 +99,7 @@
   function seccionDe(segs) {
     var s = segs[0] || "inicio";
     if (s === "inicio") return "inicio";
-    if (s === "expedientes" || s === "exp" || s === "nueva") return "expedientes";
+    if (s === "expedientes" || s === "exp") return "expedientes";
     if (s === "lab") return "lab";
     if (s === "informes" || s === "informe") return "informes";
     if (s === "mas") return "mas";
@@ -150,7 +150,7 @@
       el.nav[n.id] = { a: a, badge: badge, def: n };
       return a;
     }));
-    el.fab = h("a", { class: "fab", href: "#/nueva", testid: "fab-nueva" }, ui.icon("plus"), h("span", null, "Nueva entrada"));
+    el.fab = h("a", { class: "fab", href: "#/nueva", testid: "fab-nueva", "aria-label": "Nueva entrada", title: "Nueva entrada" }, ui.icon("plus"), h("span", { class: "fab-txt" }, "Nueva entrada"));
     el.toasts = h("div", { id: "toasts", class: "toasts", role: "status", "aria-live": "polite" });
     raiz.appendChild(el.cab);
     raiz.appendChild(el.banda);
