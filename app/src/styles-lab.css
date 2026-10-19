@@ -1,0 +1,170 @@
+/* styles-lab.css · Paquete D · Laboratorio (Microbiología, Biología molecular, Nueva tanda) y componentes S/I/R y PCR */
+
+/* ---------- selector de departamento ---------- */
+.lab-selector {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border: 1.5px solid var(--border-strong); border-radius: var(--r-campo); overflow: hidden;
+  margin: 0 0 var(--s4); background: var(--surface);
+}
+.lab-sel {
+  display: flex; align-items: center; justify-content: center; gap: var(--s2);
+  min-height: 52px; padding: 0 var(--s2); text-decoration: none; color: var(--text);
+  font-weight: 500; font-size: 1.0625rem; text-align: center; line-height: 1.15;
+}
+.lab-sel + .lab-sel { border-left: 1px solid var(--border-strong); }
+.lab-sel[aria-current="page"] { background: var(--primary); color: var(--on-primary); font-weight: 700; }
+.lab-sel .ico { width: 22px; height: 22px; }
+
+/* ---------- tareas micro ---------- */
+.lab-tarea { display: flex; flex-direction: column; gap: var(--s2); }
+.lab-tarea > p { margin: 0; }
+.lab-ref { color: var(--text); text-decoration: none; font-size: 1.125rem; min-height: 32px; display: inline-flex; align-items: center; }
+.lab-ref:hover b { text-decoration: underline; }
+.lab-tarea-an { font-weight: 500; }
+.lab-tarea .btn { margin-top: var(--s2); }
+.lab-tarde { color: var(--revisar); font-weight: 500; }
+.lab-tarea .aviso { padding: var(--s2) var(--s3); font-size: 1.0625rem; }
+.lab-vacio .btn { margin-top: var(--s2); }
+
+/* ---------- hoja registrar resultado ---------- */
+.lab-hoja > p { margin: 0 0 var(--s2); }
+.lab-hoja-sub { font-size: 1.125rem; }
+.lab-fs { border: 0; padding: 0; margin: var(--s3) 0 var(--s4); min-width: 0; }
+.lab-opciones { display: grid; gap: var(--s2); }
+.lab-opcion {
+  display: flex; align-items: center; gap: var(--s3);
+  min-height: 56px; padding: var(--s2) var(--s4);
+  border: 1.5px solid var(--border-strong); border-radius: var(--r-tarjeta); background: var(--surface);
+  cursor: pointer; font-size: 1.125rem; line-height: 1.3;
+}
+.lab-opcion input { width: 24px; height: 24px; margin: 0; flex: none; accent-color: var(--primary); }
+.lab-opcion:has(input:checked) { border-color: var(--primary); background: var(--primary-soft); color: var(--on-primary-soft); font-weight: 700; box-shadow: inset 0 0 0 1px var(--primary); }
+.lab-opcion:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+.lab-opcion-txt { min-width: 0; overflow-wrap: anywhere; }
+.lab-h3 { font-size: 1.125rem; margin: var(--s4) 0 var(--s2); }
+.lab-zona-aislado, .lab-zona-ab { min-width: 0; }
+.lab-norma { margin: 0 0 var(--s3); }
+.lab-faltan { min-height: 1.5em; margin: var(--s2) 0 0; }
+.lab-faltan:empty { display: none; }
+
+/* antibiograma: una fila por antimicrobiano */
+.lab-ab-filas { display: grid; gap: var(--s2); }
+.lab-ab-fila {
+  display: grid; grid-template-columns: 1fr; gap: var(--s2);
+  padding: var(--s2) 0; border-bottom: 1px solid var(--border);
+}
+.lab-ab-nombre { display: flex; flex-wrap: wrap; align-items: center; gap: 6px var(--s2); font-weight: 500; }
+.lab-ab-ctl { display: flex; align-items: center; gap: var(--s2); min-width: 0; }
+.lab-sir-seg { flex: none; flex-wrap: nowrap; }
+.lab-sir-seg > .lab-sir-btn { min-width: 52px; padding: 0; justify-content: center; font-weight: 700; font-size: 1.125rem; }
+.lab-sir-seg > .lab-sir-btn[data-sir="S"][aria-pressed="true"] { background: var(--ok); color: var(--surface); }
+.lab-sir-seg > .lab-sir-btn[data-sir="I"][aria-pressed="true"] { background: var(--revisar); color: var(--surface); }
+.lab-sir-seg > .lab-sir-btn[data-sir="R"][aria-pressed="true"] { background: var(--critico); color: var(--surface); }
+.lab-ab-valor { flex: 1 1 64px; min-width: 0; max-width: 120px; }
+.lab-intr { font-size: .9375rem; min-height: 28px; }
+@media (min-width: 600px) {
+  .lab-ab-fila { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+}
+
+/* barra S/I/R compacta (ficha, informe, hoja de aislado) */
+.lab-sir { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+.lab-sir-cab { justify-content: space-between; }
+.lab-sir-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-sir-item {
+  display: inline-flex; align-items: center; gap: 4px;
+  min-height: 34px; padding: 2px 8px; border-radius: 8px;
+  font-size: .9375rem; line-height: 1.1; border: 1px solid transparent;
+  font-variant-numeric: tabular-nums;
+}
+.lab-sir-item[data-sir="S"] { background: var(--ok-bg); color: var(--ok); }
+.lab-sir-item[data-sir="I"] { background: var(--revisar-bg); color: var(--revisar); }
+.lab-sir-item[data-sir="R"] { background: var(--critico-bg); color: var(--critico); border-color: currentColor; }
+.lab-sir-atm { font-weight: 500; letter-spacing: .02em; }
+.lab-sir-letra { font-weight: 700; min-width: 1em; text-align: center; }
+.lab-sir-valor { opacity: .9; }
+.lab-sir-intr { font-style: italic; opacity: .9; }
+.lab-sir-norma { margin: 0; }
+.lab-sir-nota { margin: 0; }
+.lab-pcrgen { display: flex; flex-direction: column; gap: var(--s2); align-items: flex-start; }
+.lab-btn-pcrgen { flex-wrap: wrap; text-align: left; justify-content: flex-start; height: auto; padding-top: 8px; padding-bottom: 8px; max-width: 100%; }
+.lab-pcrgen-det { font-weight: 500; }
+.lab-taxon { font-size: 1.125rem; }
+
+/* barras CSS (G7) */
+.lab-barras { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.lab-barra { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr) 2.5em; align-items: center; gap: var(--s2); font-size: 1.0625rem; }
+.lab-barra-et { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lab-barra-pista { height: 18px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+.lab-barra-relleno { display: block; height: 100%; background: var(--serie-1); border-radius: 999px; }
+.lab-barra-n { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+@media (max-width: 380px) { .lab-barra { grid-template-columns: minmax(0, 8.5em) minmax(0, 1fr) 2em; } }
+
+/* ---------- resultado PCR (chip compartido) ---------- */
+.pcr-res { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pcr-res-fila { gap: 6px var(--s2); }
+.pcr-ct { font-size: 1rem; white-space: nowrap; }
+.pcr-tanda-enl { color: var(--link); white-space: nowrap; min-height: 32px; display: inline-flex; align-items: center; }
+.pcr-nota { margin: 0; color: var(--text-muted); overflow-wrap: anywhere; }
+.pcr-chip { white-space: normal; }
+
+/* ---------- molecular ---------- */
+.pcr-rotulo { margin: 0 0 var(--s4); font-size: 1.0625rem; }
+.pcr-kpi { display: flex; flex-direction: column; gap: var(--s2); }
+.pcr-kpi > p { margin: 0; }
+.pcr-kpi-et { font-family: var(--f-titulo); font-weight: 600; font-size: 1.125rem; }
+.pcr-kpi-cifra .cifra { font-size: 2.5rem; font-weight: 700; line-height: 1.1; }
+.pcr-kpi-pct { font-size: 1.25rem; color: var(--text-muted); font-weight: 500; }
+.pcr-pend, .pcr-tanda { display: flex; flex-direction: column; gap: var(--s2); }
+.pcr-pend > p, .pcr-tanda > p { margin: 0; }
+.pcr-pend-diana { font-weight: 700; font-size: 1.125rem; min-width: 0; }
+.pcr-pend-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px var(--s3); }
+.pcr-pend-lista a { min-height: 32px; display: inline-flex; align-items: center; }
+.pcr-rep { color: var(--novalido); font-weight: 500; }
+.pcr-tanda-id { font-family: var(--f-mono); font-size: 1.0625rem; }
+.pcr-tanda-diana { font-weight: 500; }
+.pcr-ctrls .chip { gap: 6px; }
+.pcr-ctrl b { font-weight: 700; }
+.pcr-tanda .aviso { padding: var(--s2) var(--s3); font-size: 1.0625rem; }
+.pcr-tanda .tabla { font-size: 1rem; }
+.pcr-tanda .tabla th, .pcr-tanda .tabla td { padding: 6px 6px; }
+.pcr-tanda[data-valida="0"] { border-color: var(--novalido); }
+
+/* ---------- nueva tanda ---------- */
+.lab-tanda > .tarjeta { margin-bottom: var(--s4); }
+.pcr-ctrl-fila {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(72px, 110px); align-items: center; gap: var(--s2);
+  padding: var(--s2) 0; border-bottom: 1px solid var(--border);
+}
+.pcr-ctrl-fila:last-child { border-bottom: 0; }
+.pcr-ctrl-et { font-weight: 500; min-width: 0; }
+.pcr-ct-in { font-family: var(--f-mono); font-size: 1.0625rem; text-align: right; padding-left: 8px; padding-right: 8px; min-width: 0; }
+.pcr-ct-in::placeholder { font-family: var(--f-cuerpo); color: var(--text-muted); opacity: 1; }
+.pcr-sinct { display: inline-flex; align-items: center; gap: 6px; min-height: 48px; cursor: pointer; white-space: nowrap; font-size: 1.0625rem; }
+.pcr-sinct input, .pcr-incl input { width: 22px; height: 22px; margin: 0; accent-color: var(--primary); flex: none; }
+.pcr-pocillos { display: grid; gap: var(--s3); }
+.pcr-poc { border: 1px solid var(--border); border-radius: var(--r-tarjeta); padding: var(--s3); display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+.pcr-poc-cab { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; }
+.pcr-incl { display: inline-flex; align-items: center; gap: var(--s2); min-height: 44px; cursor: pointer; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pcr-pos { font-size: 1rem; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); }
+.pcr-poc-m { margin: 0; }
+.pcr-poc-campos { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--s2); align-items: end; }
+.pcr-campo { display: flex; flex-direction: column; gap: 2px; font-size: .9375rem; color: var(--text-muted); min-width: 0; }
+.pcr-campo .input { color: var(--text); }
+.pcr-poc-res { min-height: 32px; }
+.pcr-previa-wrap { position: sticky; bottom: calc(var(--barra-alto) + var(--safe-b) + var(--s2)); z-index: 5; display: flex; flex-direction: column; gap: var(--s2); }
+@media (min-width: 600px) { .pcr-previa-wrap { bottom: var(--s3); } }
+.pcr-previa { box-shadow: var(--sombra); border-color: var(--border-strong); display: flex; flex-direction: column; gap: var(--s1); max-height: 46vh; overflow-y: auto; }
+.pcr-previa > p { margin: 0; }
+.pcr-previa-tit { font-family: var(--f-titulo); }
+.pcr-previa-v .chip { font-size: 1.0625rem; white-space: normal; }
+.pcr-errores { margin: 0; padding-left: 1.2em; color: var(--critico); }
+.pcr-previa-wrap .btn { box-shadow: var(--sombra); }
+
+@media print {
+  .lab-selector, .lab-tarea .btn, .btn-nueva-tanda, .lab-pcrgen { display: none !important; }
+}
+
+/* tablas de pocillos: nunca empujan el ancho de la página */
+.pcr-tanda > details, .pcr-tanda .tabla-wrap { min-width: 0; max-width: 100%; }
+.pcr-tanda .tabla-wrap { overflow-x: auto; }
+.pcr-tanda .tabla td:last-child { white-space: normal; }

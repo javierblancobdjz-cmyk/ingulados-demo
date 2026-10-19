@@ -1,0 +1,1454 @@
+{
+ "_nota": "Calculado por el oráculo de gen_semilla.py sobre la semilla, SIN cambios del usuario. El motor JS debe coincidir.",
+ "n": {
+  "expedientes": 52,
+  "muestras": 105,
+  "analisis": 190,
+  "aislados": 33,
+  "tandas": 44,
+  "informes": 39,
+  "valoraciones": 26,
+  "comunicaciones": 6,
+  "eventos": 421
+ },
+ "estado_expediente": {
+  "ING-26-0301": "EMITIDO",
+  "ING-26-0302": "EMITIDO",
+  "ING-26-0303": "EMITIDO",
+  "ING-26-0304": "EMITIDO",
+  "ING-26-0305": "EMITIDO",
+  "ING-26-0306": "EMITIDO",
+  "ING-26-0307": "EMITIDO",
+  "ING-26-0308": "EMITIDO",
+  "ING-26-0309": "EMITIDO",
+  "ING-26-0310": "EMITIDO",
+  "ING-26-0311": "EMITIDO",
+  "ING-26-0312": "EMITIDO",
+  "ING-26-0313": "EMITIDO",
+  "ING-26-0314": "EMITIDO",
+  "ING-26-0315": "EMITIDO",
+  "ING-26-0316": "EMITIDO",
+  "ING-26-0317": "EMITIDO",
+  "ING-26-0318": "EMITIDO",
+  "ING-26-0319": "EMITIDO",
+  "ING-26-0320": "EMITIDO",
+  "ING-26-0321": "EMITIDO",
+  "ING-26-0322": "EMITIDO",
+  "ING-26-0323": "EMITIDO",
+  "ING-26-0324": "EMITIDO",
+  "ING-26-0325": "EMITIDO",
+  "ING-26-0326": "BLOQUEADO",
+  "ING-26-0327": "EMITIDO",
+  "ING-26-0328": "EMITIDO",
+  "ING-26-0329": "EMITIDO",
+  "ING-26-0330": "EMITIDO",
+  "ING-26-0331": "EMITIDO",
+  "ING-26-0332": "EMITIDO",
+  "ING-26-0333": "EMITIDO",
+  "ING-26-0334": "EMITIDO",
+  "ING-26-0335": "EMITIDO",
+  "ING-26-0336": "EMITIDO",
+  "ING-26-0337": "PENDIENTE_VALORACION",
+  "ING-26-0338": "LISTO_PARA_VALIDAR",
+  "ING-26-0339": "LISTO_PARA_VALIDAR",
+  "ING-26-0340": "EN_ANALISIS",
+  "ING-26-0341": "LISTO_PARA_VALIDAR",
+  "ING-26-0342": "EN_ANALISIS",
+  "ING-26-0343": "LISTO_PARA_VALIDAR",
+  "ING-26-0344": "LISTO_PARA_VALIDAR",
+  "ING-26-0345": "EMITIDO",
+  "ING-26-0346": "PENDIENTE_VALORACION",
+  "ING-26-0347": "EMITIDO",
+  "ING-26-0348": "EMITIDO",
+  "ING-26-0349": "RECIBIDO",
+  "ING-26-0350": "RECIBIDO",
+  "ING-26-0351": "EN_ANALISIS",
+  "ING-26-0352": "RECIBIDO"
+ },
+ "recuento_estados": {
+  "EMITIDO": 38,
+  "BLOQUEADO": 1,
+  "PENDIENTE_VALORACION": 2,
+  "LISTO_PARA_VALIDAR": 5,
+  "EN_ANALISIS": 3,
+  "RECIBIDO": 3
+ },
+ "estado_analisis_recuento": {
+  "RESULTADO": 171,
+  "PENDIENTE": 15,
+  "REPETIR": 4
+ },
+ "estado_analisis": {
+  "ING-26-0301-M01-pcr_btv": "RESULTADO",
+  "ING-26-0301-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0301-M02-pcr_btv": "RESULTADO",
+  "ING-26-0301-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0301-M03-pcr_btv": "RESULTADO",
+  "ING-26-0301-M03-pcr_ehdv": "RESULTADO",
+  "ING-26-0302-M01-pcr_btv": "RESULTADO",
+  "ING-26-0302-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0302-M02-pcr_btv": "RESULTADO",
+  "ING-26-0302-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0302-M03-pcr_btv": "RESULTADO",
+  "ING-26-0302-M03-pcr_ehdv": "RESULTADO",
+  "ING-26-0303-M01-cult_piogenos": "RESULTADO",
+  "ING-26-0304-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0305-M01-cult_piogenos": "RESULTADO",
+  "ING-26-0305-M01-pcr_mtbc": "RESULTADO",
+  "ING-26-0305-M02-cult_piogenos": "RESULTADO",
+  "ING-26-0305-M02-pcr_mtbc": "RESULTADO",
+  "ING-26-0306-M01-cult_piogenos": "RESULTADO",
+  "ING-26-0307-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0308-M01-cult_general": "RESULTADO",
+  "ING-26-0308-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0309-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0310-M01-pcr_btv": "RESULTADO",
+  "ING-26-0310-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0310-M02-pcr_btv": "RESULTADO",
+  "ING-26-0310-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0310-M03-pcr_btv": "RESULTADO",
+  "ING-26-0310-M03-pcr_ehdv": "RESULTADO",
+  "ING-26-0311-M01-pcr_btv": "RESULTADO",
+  "ING-26-0311-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0311-M02-pcr_btv": "RESULTADO",
+  "ING-26-0311-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0312-M01-cult_general": "RESULTADO",
+  "ING-26-0312-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0312-M02-cult_general": "RESULTADO",
+  "ING-26-0312-M02-cult_salmonella": "RESULTADO",
+  "ING-26-0313-M01-pcr_btv": "RESULTADO",
+  "ING-26-0313-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0313-M02-pcr_btv": "RESULTADO",
+  "ING-26-0313-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0313-M03-pcr_btv": "RESULTADO",
+  "ING-26-0313-M03-pcr_ehdv": "RESULTADO",
+  "ING-26-0314-M01-pcr_btv": "RESULTADO",
+  "ING-26-0314-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0314-M02-pcr_btv": "RESULTADO",
+  "ING-26-0314-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0314-M03-pcr_btv": "RESULTADO",
+  "ING-26-0314-M03-pcr_ehdv": "RESULTADO",
+  "ING-26-0315-M01-cult_general": "RESULTADO",
+  "ING-26-0315-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0315-M02-cult_general": "RESULTADO",
+  "ING-26-0315-M02-cult_salmonella": "RESULTADO",
+  "ING-26-0316-M01-cult_piogenos": "RESULTADO",
+  "ING-26-0316-M01-pcr_mtbc": "RESULTADO",
+  "ING-26-0316-M02-cult_piogenos": "RESULTADO",
+  "ING-26-0316-M02-pcr_mtbc": "RESULTADO",
+  "ING-26-0317-M01-cult_piogenos": "RESULTADO",
+  "ING-26-0317-M01-pcr_mtbc": "RESULTADO",
+  "ING-26-0317-M02-cult_piogenos": "RESULTADO",
+  "ING-26-0317-M02-pcr_mtbc": "RESULTADO",
+  "ING-26-0317-M03-cult_piogenos": "RESULTADO",
+  "ING-26-0317-M03-pcr_mtbc": "RESULTADO",
+  "ING-26-0317-M04-cult_piogenos": "RESULTADO",
+  "ING-26-0317-M04-pcr_mtbc": "RESULTADO",
+  "ING-26-0318-M01-cult_general": "RESULTADO",
+  "ING-26-0318-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0319-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0319-M02-cult_mastitis": "RESULTADO",
+  "ING-26-0320-M01-cult_general": "RESULTADO",
+  "ING-26-0320-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0321-M01-cult_general": "RESULTADO",
+  "ING-26-0322-M01-cult_general": "RESULTADO",
+  "ING-26-0322-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0322-M02-cult_general": "RESULTADO",
+  "ING-26-0322-M02-cult_salmonella": "RESULTADO",
+  "ING-26-0323-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0323-M02-cult_mastitis": "RESULTADO",
+  "ING-26-0324-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0324-M02-cult_mastitis": "RESULTADO",
+  "ING-26-0324-M03-cult_mastitis": "RESULTADO",
+  "ING-26-0325-M01-cult_general": "RESULTADO",
+  "ING-26-0325-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0325-M02-cult_general": "RESULTADO",
+  "ING-26-0325-M02-cult_salmonella": "RESULTADO",
+  "ING-26-0326-M01-cult_aborto": "PENDIENTE",
+  "ING-26-0326-M01-pcr_bru": "PENDIENTE",
+  "ING-26-0326-M01-pcr_chl": "PENDIENTE",
+  "ING-26-0326-M01-pcr_cox": "PENDIENTE",
+  "ING-26-0327-M01-cult_aborto": "RESULTADO",
+  "ING-26-0327-M01-pcr_bru": "RESULTADO",
+  "ING-26-0327-M01-pcr_chl": "RESULTADO",
+  "ING-26-0327-M01-pcr_cox": "RESULTADO",
+  "ING-26-0328-M01-cult_piogenos": "RESULTADO",
+  "ING-26-0328-M01-pcr_mtbc": "RESULTADO",
+  "ING-26-0328-M02-cult_piogenos": "RESULTADO",
+  "ING-26-0328-M02-pcr_mtbc": "RESULTADO",
+  "ING-26-0328-M03-cult_piogenos": "RESULTADO",
+  "ING-26-0328-M03-pcr_mtbc": "RESULTADO",
+  "ING-26-0328-M04-cult_piogenos": "RESULTADO",
+  "ING-26-0328-M04-pcr_mtbc": "RESULTADO",
+  "ING-26-0328-M05-cult_piogenos": "RESULTADO",
+  "ING-26-0328-M05-pcr_mtbc": "RESULTADO",
+  "ING-26-0328-M06-cult_piogenos": "RESULTADO",
+  "ING-26-0328-M06-pcr_mtbc": "RESULTADO",
+  "ING-26-0329-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0329-M02-cult_mastitis": "RESULTADO",
+  "ING-26-0330-M01-cult_aborto": "RESULTADO",
+  "ING-26-0330-M01-pcr_bru": "RESULTADO",
+  "ING-26-0330-M01-pcr_chl": "RESULTADO",
+  "ING-26-0330-M01-pcr_cox": "RESULTADO",
+  "ING-26-0331-M01-pcr_btv": "RESULTADO",
+  "ING-26-0331-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0331-M02-pcr_btv": "RESULTADO",
+  "ING-26-0331-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0332-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0332-M02-cult_mastitis": "RESULTADO",
+  "ING-26-0333-M01-pcr_adv": "RESULTADO",
+  "ING-26-0333-M01-pcr_vppa": "RESULTADO",
+  "ING-26-0333-M02-pcr_vppa": "RESULTADO",
+  "ING-26-0334-M01-pcr_btv": "RESULTADO",
+  "ING-26-0334-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0334-M02-pcr_btv": "RESULTADO",
+  "ING-26-0334-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0335-M01-cult_aborto": "RESULTADO",
+  "ING-26-0335-M01-pcr_bru": "RESULTADO",
+  "ING-26-0335-M01-pcr_chl": "RESULTADO",
+  "ING-26-0335-M01-pcr_cox": "RESULTADO",
+  "ING-26-0335-M02-cult_aborto": "RESULTADO",
+  "ING-26-0335-M02-pcr_bru": "RESULTADO",
+  "ING-26-0335-M02-pcr_chl": "RESULTADO",
+  "ING-26-0335-M02-pcr_cox": "RESULTADO",
+  "ING-26-0336-M01-cult_general": "RESULTADO",
+  "ING-26-0336-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0337-M01-A01-pcr_mcr": "RESULTADO",
+  "ING-26-0337-M01-cult_general": "RESULTADO",
+  "ING-26-0337-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0337-M02-cult_general": "RESULTADO",
+  "ING-26-0337-M02-cult_salmonella": "RESULTADO",
+  "ING-26-0338-M01-pcr_btv": "RESULTADO",
+  "ING-26-0338-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0338-M02-cult_general": "RESULTADO",
+  "ING-26-0338-M03-pcr_btv": "RESULTADO",
+  "ING-26-0338-M03-pcr_ehdv": "RESULTADO",
+  "ING-26-0339-M01-cult_aborto": "RESULTADO",
+  "ING-26-0339-M01-pcr_bru": "RESULTADO",
+  "ING-26-0339-M01-pcr_chl": "RESULTADO",
+  "ING-26-0339-M01-pcr_cox": "RESULTADO",
+  "ING-26-0340-M01-pcr_adv": "REPETIR",
+  "ING-26-0340-M02-pcr_adv": "REPETIR",
+  "ING-26-0340-M03-pcr_adv": "REPETIR",
+  "ING-26-0340-M04-pcr_adv": "REPETIR",
+  "ING-26-0341-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0341-M02-cult_mastitis": "RESULTADO",
+  "ING-26-0341-M03-cult_mastitis": "RESULTADO",
+  "ING-26-0342-M01-A01-pcr_mec": "PENDIENTE",
+  "ING-26-0342-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0342-M02-cult_mastitis": "RESULTADO",
+  "ING-26-0342-M03-cult_mastitis": "RESULTADO",
+  "ING-26-0343-M01-pcr_btv": "RESULTADO",
+  "ING-26-0343-M01-pcr_ehdv": "RESULTADO",
+  "ING-26-0343-M02-pcr_btv": "RESULTADO",
+  "ING-26-0343-M02-pcr_ehdv": "RESULTADO",
+  "ING-26-0344-M01-cult_general": "RESULTADO",
+  "ING-26-0345-M01-cult_aborto": "RESULTADO",
+  "ING-26-0345-M01-pcr_bru": "RESULTADO",
+  "ING-26-0345-M01-pcr_chl": "RESULTADO",
+  "ING-26-0345-M01-pcr_cox": "RESULTADO",
+  "ING-26-0346-M01-cult_general": "RESULTADO",
+  "ING-26-0346-M01-cult_salmonella": "RESULTADO",
+  "ING-26-0346-M02-cult_general": "RESULTADO",
+  "ING-26-0346-M02-cult_salmonella": "RESULTADO",
+  "ING-26-0347-M01-frotis_carbunco": "RESULTADO",
+  "ING-26-0348-M01-cult_mastitis": "RESULTADO",
+  "ING-26-0349-M01-cult_general": "PENDIENTE",
+  "ING-26-0349-M01-cult_salmonella": "PENDIENTE",
+  "ING-26-0349-M02-cult_general": "PENDIENTE",
+  "ING-26-0349-M02-cult_salmonella": "PENDIENTE",
+  "ING-26-0350-M01-cult_general": "PENDIENTE",
+  "ING-26-0350-M01-cult_salmonella": "PENDIENTE",
+  "ING-26-0351-M01-cult_piogenos": "PENDIENTE",
+  "ING-26-0351-M01-pcr_mtbc": "RESULTADO",
+  "ING-26-0351-M02-cult_piogenos": "RESULTADO",
+  "ING-26-0351-M02-pcr_mtbc": "RESULTADO",
+  "ING-26-0351-M03-cult_piogenos": "RESULTADO",
+  "ING-26-0351-M03-pcr_mtbc": "RESULTADO",
+  "ING-26-0351-M04-cult_general": "RESULTADO",
+  "ING-26-0352-M01-cult_mastitis": "PENDIENTE",
+  "ING-26-0352-M02-cult_mastitis": "PENDIENTE",
+  "ING-26-0352-M03-cult_mastitis": "PENDIENTE"
+ },
+ "tanda_vigente": {
+  "ING-26-0301-M01-pcr_btv": "T-2026-058",
+  "ING-26-0301-M01-pcr_ehdv": "T-2026-059",
+  "ING-26-0301-M02-pcr_btv": "T-2026-058",
+  "ING-26-0301-M02-pcr_ehdv": "T-2026-059",
+  "ING-26-0301-M03-pcr_btv": "T-2026-058",
+  "ING-26-0301-M03-pcr_ehdv": "T-2026-059",
+  "ING-26-0302-M01-pcr_btv": "T-2026-060",
+  "ING-26-0302-M01-pcr_ehdv": "T-2026-061",
+  "ING-26-0302-M02-pcr_btv": "T-2026-060",
+  "ING-26-0302-M02-pcr_ehdv": "T-2026-061",
+  "ING-26-0302-M03-pcr_btv": "T-2026-060",
+  "ING-26-0302-M03-pcr_ehdv": "T-2026-061",
+  "ING-26-0305-M01-pcr_mtbc": "T-2026-062",
+  "ING-26-0305-M02-pcr_mtbc": "T-2026-062",
+  "ING-26-0310-M01-pcr_btv": "T-2026-063",
+  "ING-26-0310-M01-pcr_ehdv": "T-2026-064",
+  "ING-26-0310-M02-pcr_btv": "T-2026-063",
+  "ING-26-0310-M02-pcr_ehdv": "T-2026-064",
+  "ING-26-0310-M03-pcr_btv": "T-2026-063",
+  "ING-26-0310-M03-pcr_ehdv": "T-2026-064",
+  "ING-26-0311-M01-pcr_btv": "T-2026-063",
+  "ING-26-0311-M01-pcr_ehdv": "T-2026-064",
+  "ING-26-0311-M02-pcr_btv": "T-2026-063",
+  "ING-26-0311-M02-pcr_ehdv": "T-2026-064",
+  "ING-26-0313-M01-pcr_btv": "T-2026-065",
+  "ING-26-0313-M01-pcr_ehdv": "T-2026-066",
+  "ING-26-0313-M02-pcr_btv": "T-2026-065",
+  "ING-26-0313-M02-pcr_ehdv": "T-2026-066",
+  "ING-26-0313-M03-pcr_btv": "T-2026-065",
+  "ING-26-0313-M03-pcr_ehdv": "T-2026-066",
+  "ING-26-0314-M01-pcr_btv": "T-2026-067",
+  "ING-26-0314-M01-pcr_ehdv": "T-2026-068",
+  "ING-26-0314-M02-pcr_btv": "T-2026-067",
+  "ING-26-0314-M02-pcr_ehdv": "T-2026-068",
+  "ING-26-0314-M03-pcr_btv": "T-2026-067",
+  "ING-26-0314-M03-pcr_ehdv": "T-2026-068",
+  "ING-26-0316-M01-pcr_mtbc": "T-2026-070",
+  "ING-26-0316-M02-pcr_mtbc": "T-2026-070",
+  "ING-26-0317-M01-pcr_mtbc": "T-2026-071",
+  "ING-26-0317-M02-pcr_mtbc": "T-2026-071",
+  "ING-26-0317-M03-pcr_mtbc": "T-2026-071",
+  "ING-26-0317-M04-pcr_mtbc": "T-2026-071",
+  "ING-26-0326-M01-pcr_bru": null,
+  "ING-26-0326-M01-pcr_chl": null,
+  "ING-26-0326-M01-pcr_cox": null,
+  "ING-26-0327-M01-pcr_bru": "T-2026-072",
+  "ING-26-0327-M01-pcr_chl": "T-2026-074",
+  "ING-26-0327-M01-pcr_cox": "T-2026-073",
+  "ING-26-0328-M01-pcr_mtbc": "T-2026-041",
+  "ING-26-0328-M02-pcr_mtbc": "T-2026-041",
+  "ING-26-0328-M03-pcr_mtbc": "T-2026-041",
+  "ING-26-0328-M04-pcr_mtbc": "T-2026-041",
+  "ING-26-0328-M05-pcr_mtbc": "T-2026-041",
+  "ING-26-0328-M06-pcr_mtbc": "T-2026-041",
+  "ING-26-0330-M01-pcr_bru": "T-2026-075",
+  "ING-26-0330-M01-pcr_chl": "T-2026-077",
+  "ING-26-0330-M01-pcr_cox": "T-2026-076",
+  "ING-26-0331-M01-pcr_btv": "T-2026-042",
+  "ING-26-0331-M01-pcr_ehdv": "T-2026-043",
+  "ING-26-0331-M02-pcr_btv": "T-2026-042",
+  "ING-26-0331-M02-pcr_ehdv": "T-2026-043",
+  "ING-26-0333-M01-pcr_adv": "T-2026-045",
+  "ING-26-0333-M01-pcr_vppa": "T-2026-044",
+  "ING-26-0333-M02-pcr_vppa": "T-2026-044",
+  "ING-26-0334-M01-pcr_btv": "T-2026-078",
+  "ING-26-0334-M01-pcr_ehdv": "T-2026-079",
+  "ING-26-0334-M02-pcr_btv": "T-2026-078",
+  "ING-26-0334-M02-pcr_ehdv": "T-2026-079",
+  "ING-26-0335-M01-pcr_bru": "T-2026-046",
+  "ING-26-0335-M01-pcr_chl": "T-2026-048",
+  "ING-26-0335-M01-pcr_cox": "T-2026-047",
+  "ING-26-0335-M02-pcr_bru": "T-2026-046",
+  "ING-26-0335-M02-pcr_chl": "T-2026-048",
+  "ING-26-0335-M02-pcr_cox": "T-2026-047",
+  "ING-26-0337-M01-A01-pcr_mcr": "T-2026-049",
+  "ING-26-0338-M01-pcr_btv": "T-2026-050",
+  "ING-26-0338-M01-pcr_ehdv": "T-2026-052",
+  "ING-26-0338-M03-pcr_btv": "T-2026-050",
+  "ING-26-0338-M03-pcr_ehdv": "T-2026-052",
+  "ING-26-0339-M01-pcr_bru": "T-2026-080",
+  "ING-26-0339-M01-pcr_chl": "T-2026-082",
+  "ING-26-0339-M01-pcr_cox": "T-2026-081",
+  "ING-26-0340-M01-pcr_adv": "T-2026-053",
+  "ING-26-0340-M02-pcr_adv": "T-2026-053",
+  "ING-26-0340-M03-pcr_adv": "T-2026-053",
+  "ING-26-0340-M04-pcr_adv": "T-2026-053",
+  "ING-26-0342-M01-A01-pcr_mec": null,
+  "ING-26-0343-M01-pcr_btv": "T-2026-083",
+  "ING-26-0343-M01-pcr_ehdv": "T-2026-084",
+  "ING-26-0343-M02-pcr_btv": "T-2026-083",
+  "ING-26-0343-M02-pcr_ehdv": "T-2026-084",
+  "ING-26-0345-M01-pcr_bru": "T-2026-054",
+  "ING-26-0345-M01-pcr_chl": "T-2026-056",
+  "ING-26-0345-M01-pcr_cox": "T-2026-055",
+  "ING-26-0351-M01-pcr_mtbc": "T-2026-057",
+  "ING-26-0351-M02-pcr_mtbc": "T-2026-057",
+  "ING-26-0351-M03-pcr_mtbc": "T-2026-057"
+ },
+ "resultado_pcr": {
+  "ING-26-0301-M01-pcr_btv": "negativo",
+  "ING-26-0301-M01-pcr_ehdv": "negativo",
+  "ING-26-0301-M02-pcr_btv": "negativo",
+  "ING-26-0301-M02-pcr_ehdv": "negativo",
+  "ING-26-0301-M03-pcr_btv": "negativo",
+  "ING-26-0301-M03-pcr_ehdv": "negativo",
+  "ING-26-0302-M01-pcr_btv": "negativo",
+  "ING-26-0302-M01-pcr_ehdv": "negativo",
+  "ING-26-0302-M02-pcr_btv": "negativo",
+  "ING-26-0302-M02-pcr_ehdv": "negativo",
+  "ING-26-0302-M03-pcr_btv": "negativo",
+  "ING-26-0302-M03-pcr_ehdv": "positivo",
+  "ING-26-0305-M01-pcr_mtbc": "negativo",
+  "ING-26-0305-M02-pcr_mtbc": "negativo",
+  "ING-26-0310-M01-pcr_btv": "negativo",
+  "ING-26-0310-M01-pcr_ehdv": "negativo",
+  "ING-26-0310-M02-pcr_btv": "dudoso",
+  "ING-26-0310-M02-pcr_ehdv": "negativo",
+  "ING-26-0310-M03-pcr_btv": "negativo",
+  "ING-26-0310-M03-pcr_ehdv": "negativo",
+  "ING-26-0311-M01-pcr_btv": "negativo",
+  "ING-26-0311-M01-pcr_ehdv": "negativo",
+  "ING-26-0311-M02-pcr_btv": "negativo",
+  "ING-26-0311-M02-pcr_ehdv": "negativo",
+  "ING-26-0313-M01-pcr_btv": "negativo",
+  "ING-26-0313-M01-pcr_ehdv": "inhibido",
+  "ING-26-0313-M02-pcr_btv": "negativo",
+  "ING-26-0313-M02-pcr_ehdv": "negativo",
+  "ING-26-0313-M03-pcr_btv": "negativo",
+  "ING-26-0313-M03-pcr_ehdv": "negativo",
+  "ING-26-0314-M01-pcr_btv": "negativo",
+  "ING-26-0314-M01-pcr_ehdv": "negativo",
+  "ING-26-0314-M02-pcr_btv": "negativo",
+  "ING-26-0314-M02-pcr_ehdv": "negativo",
+  "ING-26-0314-M03-pcr_btv": "negativo",
+  "ING-26-0314-M03-pcr_ehdv": "dudoso",
+  "ING-26-0316-M01-pcr_mtbc": "negativo",
+  "ING-26-0316-M02-pcr_mtbc": "positivo",
+  "ING-26-0317-M01-pcr_mtbc": "negativo",
+  "ING-26-0317-M02-pcr_mtbc": "negativo",
+  "ING-26-0317-M03-pcr_mtbc": "negativo",
+  "ING-26-0317-M04-pcr_mtbc": "positivo",
+  "ING-26-0326-M01-pcr_bru": null,
+  "ING-26-0326-M01-pcr_chl": null,
+  "ING-26-0326-M01-pcr_cox": null,
+  "ING-26-0327-M01-pcr_bru": "negativo",
+  "ING-26-0327-M01-pcr_chl": "negativo",
+  "ING-26-0327-M01-pcr_cox": "negativo",
+  "ING-26-0328-M01-pcr_mtbc": "positivo",
+  "ING-26-0328-M02-pcr_mtbc": "positivo",
+  "ING-26-0328-M03-pcr_mtbc": "dudoso",
+  "ING-26-0328-M04-pcr_mtbc": "negativo",
+  "ING-26-0328-M05-pcr_mtbc": "negativo",
+  "ING-26-0328-M06-pcr_mtbc": "negativo",
+  "ING-26-0330-M01-pcr_bru": "negativo",
+  "ING-26-0330-M01-pcr_chl": "negativo",
+  "ING-26-0330-M01-pcr_cox": "negativo",
+  "ING-26-0331-M01-pcr_btv": "negativo",
+  "ING-26-0331-M01-pcr_ehdv": "positivo",
+  "ING-26-0331-M02-pcr_btv": "negativo",
+  "ING-26-0331-M02-pcr_ehdv": "positivo",
+  "ING-26-0333-M01-pcr_adv": "negativo",
+  "ING-26-0333-M01-pcr_vppa": "negativo",
+  "ING-26-0333-M02-pcr_vppa": "negativo",
+  "ING-26-0334-M01-pcr_btv": "negativo",
+  "ING-26-0334-M01-pcr_ehdv": "negativo",
+  "ING-26-0334-M02-pcr_btv": "negativo",
+  "ING-26-0334-M02-pcr_ehdv": "negativo",
+  "ING-26-0335-M01-pcr_bru": "negativo",
+  "ING-26-0335-M01-pcr_chl": "negativo",
+  "ING-26-0335-M01-pcr_cox": "positivo",
+  "ING-26-0335-M02-pcr_bru": "negativo",
+  "ING-26-0335-M02-pcr_chl": "negativo",
+  "ING-26-0335-M02-pcr_cox": "positivo",
+  "ING-26-0337-M01-A01-pcr_mcr": "positivo",
+  "ING-26-0338-M01-pcr_btv": "negativo",
+  "ING-26-0338-M01-pcr_ehdv": "positivo",
+  "ING-26-0338-M03-pcr_btv": "negativo",
+  "ING-26-0338-M03-pcr_ehdv": "negativo",
+  "ING-26-0339-M01-pcr_bru": "negativo",
+  "ING-26-0339-M01-pcr_chl": "negativo",
+  "ING-26-0339-M01-pcr_cox": "negativo",
+  "ING-26-0340-M01-pcr_adv": "repetir",
+  "ING-26-0340-M02-pcr_adv": "repetir",
+  "ING-26-0340-M03-pcr_adv": "repetir",
+  "ING-26-0340-M04-pcr_adv": "repetir",
+  "ING-26-0342-M01-A01-pcr_mec": null,
+  "ING-26-0343-M01-pcr_btv": "negativo",
+  "ING-26-0343-M01-pcr_ehdv": "negativo",
+  "ING-26-0343-M02-pcr_btv": "negativo",
+  "ING-26-0343-M02-pcr_ehdv": "negativo",
+  "ING-26-0345-M01-pcr_bru": "dudoso",
+  "ING-26-0345-M01-pcr_chl": "negativo",
+  "ING-26-0345-M01-pcr_cox": "negativo",
+  "ING-26-0351-M01-pcr_mtbc": "positivo",
+  "ING-26-0351-M02-pcr_mtbc": "negativo",
+  "ING-26-0351-M03-pcr_mtbc": "inhibido"
+ },
+ "validez_tanda": {
+  "T-2026-041": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-042": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-043": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-044": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-045": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-046": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-047": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-048": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-049": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-050": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-051": {
+   "valida": false,
+   "reglas": [
+    "PCR-03"
+   ]
+  },
+  "T-2026-052": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-053": {
+   "valida": false,
+   "reglas": [
+    "PCR-01"
+   ]
+  },
+  "T-2026-054": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-055": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-056": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-057": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-058": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-059": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-060": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-061": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-062": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-063": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-064": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-065": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-066": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-067": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-068": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-069": {
+   "valida": false,
+   "reglas": [
+    "PCR-02"
+   ]
+  },
+  "T-2026-070": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-071": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-072": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-073": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-074": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-075": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-076": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-077": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-078": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-079": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-080": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-081": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-082": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-083": {
+   "valida": true,
+   "reglas": []
+  },
+  "T-2026-084": {
+   "valida": true,
+   "reglas": []
+  }
+ },
+ "positividad_por_diana": {
+  "adv": {
+   "negativo": 1
+  },
+  "bru": {
+   "negativo": 5,
+   "dudoso": 1
+  },
+  "btv": {
+   "negativo": 24,
+   "dudoso": 1
+  },
+  "chl": {
+   "negativo": 6
+  },
+  "cox": {
+   "negativo": 4,
+   "positivo": 2
+  },
+  "ehdv": {
+   "negativo": 19,
+   "positivo": 4,
+   "inhibido": 1,
+   "dudoso": 1
+  },
+  "mcr": {
+   "positivo": 1
+  },
+  "mtbc": {
+   "negativo": 10,
+   "positivo": 5,
+   "dudoso": 1,
+   "inhibido": 1
+  },
+  "vppa": {
+   "negativo": 2
+  }
+ },
+ "muestras_por_tipo_procedencia": {
+  "ganadera": 66,
+  "cinegetica": 32,
+  "mixta": 7
+ },
+ "alertas": [
+  {
+   "clave": "MIC-01~ING-26-0312-M02-A01",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0312"
+  },
+  {
+   "clave": "MIC-01~ING-26-0322-M01-A01",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0322"
+  },
+  {
+   "clave": "MIC-01~ING-26-0325-M01-A01",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0325"
+  },
+  {
+   "clave": "MIC-01~ING-26-0325-M01-A02",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0325"
+  },
+  {
+   "clave": "MIC-01~ING-26-0337-M01-A01",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0337"
+  },
+  {
+   "clave": "MIC-01~ING-26-0337-M02-A01",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "pendiente",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0337"
+  },
+  {
+   "clave": "MIC-01~ING-26-0346-M01-A01",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "pendiente",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0346"
+  },
+  {
+   "clave": "MIC-01~ING-26-0346-M01-A02",
+   "regla_id": "MIC-01",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "pendiente",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0346"
+  },
+  {
+   "clave": "MIC-02~ING-26-0337-M01-A01~colistina",
+   "regla_id": "MIC-02",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0337"
+  },
+  {
+   "clave": "MIC-02~ING-26-0342-M01-A01~cefoxitina",
+   "regla_id": "MIC-02",
+   "nivel": "revisar",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0342"
+  },
+  {
+   "clave": "MIC-04~ING-26-0345-M01-A01",
+   "regla_id": "MIC-04",
+   "nivel": "critico",
+   "capa": "analitica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0345"
+  },
+  {
+   "clave": "PCR-04~ING-26-0313-M01-pcr_ehdv",
+   "regla_id": "PCR-04",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0313"
+  },
+  {
+   "clave": "PCR-04~ING-26-0351-M03-pcr_mtbc",
+   "regla_id": "PCR-04",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "pendiente",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0351"
+  },
+  {
+   "clave": "PCR-05~ING-26-0310-M02-pcr_btv",
+   "regla_id": "PCR-05",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0310"
+  },
+  {
+   "clave": "PCR-05~ING-26-0314-M03-pcr_ehdv",
+   "regla_id": "PCR-05",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0314"
+  },
+  {
+   "clave": "PCR-05~ING-26-0328-M03-pcr_mtbc",
+   "regla_id": "PCR-05",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0328"
+  },
+  {
+   "clave": "PCR-05~ING-26-0345-M01-pcr_bru",
+   "regla_id": "PCR-05",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0345"
+  },
+  {
+   "clave": "PCR-07~ING-26-0337-M01-A01-pcr_mcr",
+   "regla_id": "PCR-07",
+   "nivel": "info",
+   "capa": "analitica",
+   "estado": "informativa",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0337"
+  },
+  {
+   "clave": "REC-01~ING-26-0301-M01",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0301"
+  },
+  {
+   "clave": "REC-01~ING-26-0306-M01",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0306"
+  },
+  {
+   "clave": "REC-01~ING-26-0314-M03",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0314"
+  },
+  {
+   "clave": "REC-01~ING-26-0319-M01",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0319"
+  },
+  {
+   "clave": "REC-01~ING-26-0341-M03",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0341"
+  },
+  {
+   "clave": "REC-01~ING-26-0343-M02",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "valorada",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0343"
+  },
+  {
+   "clave": "REC-01~ING-26-0349-M01",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "pendiente",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0349"
+  },
+  {
+   "clave": "REC-01~ING-26-0349-M02",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "pendiente",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0349"
+  },
+  {
+   "clave": "REC-01~ING-26-0352-M01",
+   "regla_id": "REC-01",
+   "nivel": "revisar",
+   "capa": "tecnica",
+   "estado": "pendiente",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0352"
+  },
+  {
+   "clave": "REC-02~ING-26-0347",
+   "regla_id": "REC-02",
+   "nivel": "info",
+   "capa": "tecnica",
+   "estado": "informativa",
+   "patogeno_id": null,
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": null,
+   "expediente_id": "ING-26-0347"
+  },
+  {
+   "clave": "SAN-02~ING-26-0333~vppa",
+   "regla_id": "SAN-02",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "valorada",
+   "patogeno_id": "vppa",
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-08T08:50:00+02:00",
+   "expediente_id": "ING-26-0333"
+  },
+  {
+   "clave": "SAN-03~ING-26-0302~ehdv",
+   "regla_id": "SAN-03",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "valorada",
+   "patogeno_id": "ehdv",
+   "requiere_comunicacion": true,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-08-28T16:30:00+02:00",
+   "expediente_id": "ING-26-0302"
+  },
+  {
+   "clave": "SAN-03~ING-26-0316~mtbc",
+   "regla_id": "SAN-03",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "valorada",
+   "patogeno_id": "mtbc",
+   "requiere_comunicacion": true,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-09-22T16:30:00+02:00",
+   "expediente_id": "ING-26-0316"
+  },
+  {
+   "clave": "SAN-03~ING-26-0317~mtbc",
+   "regla_id": "SAN-03",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "valorada",
+   "patogeno_id": "mtbc",
+   "requiere_comunicacion": true,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-09-24T16:30:00+02:00",
+   "expediente_id": "ING-26-0317"
+  },
+  {
+   "clave": "SAN-03~ING-26-0328~mtbc",
+   "regla_id": "SAN-03",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "valorada",
+   "patogeno_id": "mtbc",
+   "requiere_comunicacion": true,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-07T16:30:00+02:00",
+   "expediente_id": "ING-26-0328"
+  },
+  {
+   "clave": "SAN-03~ING-26-0331~ehdv",
+   "regla_id": "SAN-03",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "valorada",
+   "patogeno_id": "ehdv",
+   "requiere_comunicacion": true,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-08T16:30:00+02:00",
+   "expediente_id": "ING-26-0331"
+  },
+  {
+   "clave": "SAN-03~ING-26-0338~ehdv",
+   "regla_id": "SAN-03",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "valorada",
+   "patogeno_id": "ehdv",
+   "requiere_comunicacion": true,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-15T16:30:00+02:00",
+   "expediente_id": "ING-26-0338"
+  },
+  {
+   "clave": "SAN-03~ING-26-0351~mtbc",
+   "regla_id": "SAN-03",
+   "nivel": "revisar",
+   "capa": "sanitaria",
+   "estado": "pendiente",
+   "patogeno_id": "mtbc",
+   "requiere_comunicacion": true,
+   "comunicacion_pendiente": true,
+   "detectado_en": "2026-10-19T19:30:00+02:00",
+   "expediente_id": "ING-26-0351"
+  },
+  {
+   "clave": "SAN-05~ING-26-0335~coxiella",
+   "regla_id": "SAN-05",
+   "nivel": "info",
+   "capa": "sanitaria",
+   "estado": "informativa",
+   "patogeno_id": "coxiella",
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-10T16:30:00+02:00",
+   "expediente_id": "ING-26-0335"
+  },
+  {
+   "clave": "SAN-06~ING-26-0312~salmonella",
+   "regla_id": "SAN-06",
+   "nivel": "info",
+   "capa": "sanitaria",
+   "estado": "informativa",
+   "patogeno_id": "salmonella",
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-09-18T12:00:00+02:00",
+   "expediente_id": "ING-26-0312"
+  },
+  {
+   "clave": "SAN-06~ING-26-0325~salmonella",
+   "regla_id": "SAN-06",
+   "nivel": "info",
+   "capa": "sanitaria",
+   "estado": "informativa",
+   "patogeno_id": "salmonella",
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-04T12:00:00+02:00",
+   "expediente_id": "ING-26-0325"
+  },
+  {
+   "clave": "SAN-06~ING-26-0337~salmonella",
+   "regla_id": "SAN-06",
+   "nivel": "info",
+   "capa": "sanitaria",
+   "estado": "informativa",
+   "patogeno_id": "salmonella",
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-15T12:00:00+02:00",
+   "expediente_id": "ING-26-0337"
+  },
+  {
+   "clave": "SAN-06~ING-26-0346~salmonella",
+   "regla_id": "SAN-06",
+   "nivel": "info",
+   "capa": "sanitaria",
+   "estado": "informativa",
+   "patogeno_id": "salmonella",
+   "requiere_comunicacion": false,
+   "comunicacion_pendiente": false,
+   "detectado_en": "2026-10-18T12:00:00+02:00",
+   "expediente_id": "ING-26-0346"
+  }
+ ],
+ "alertas_por_regla": {
+  "REC-01": 9,
+  "SAN-03": 7,
+  "PCR-05": 4,
+  "MIC-01": 8,
+  "SAN-06": 4,
+  "PCR-04": 2,
+  "SAN-02": 1,
+  "SAN-05": 1,
+  "MIC-02": 2,
+  "PCR-07": 1,
+  "MIC-04": 1,
+  "REC-02": 1
+ },
+ "alertas_pendientes": 8,
+ "comunicaciones_pendientes": 1,
+ "guion": {
+  "G01": {
+   "ref": "ING-26-0328",
+   "estado": "EMITIDO"
+  },
+  "G03": {
+   "ref": "ING-26-0331",
+   "estado": "EMITIDO"
+  },
+  "G05": {
+   "ref": "ING-26-0333",
+   "estado": "EMITIDO"
+  },
+  "G06": {
+   "ref": "ING-26-0335",
+   "estado": "EMITIDO"
+  },
+  "G07": {
+   "ref": "ING-26-0337",
+   "estado": "PENDIENTE_VALORACION"
+  },
+  "G04": {
+   "ref": "ING-26-0338",
+   "estado": "LISTO_PARA_VALIDAR"
+  },
+  "G08": {
+   "ref": "ING-26-0340",
+   "estado": "EN_ANALISIS"
+  },
+  "G09": {
+   "ref": "ING-26-0342",
+   "estado": "EN_ANALISIS"
+  },
+  "G10": {
+   "ref": "ING-26-0345",
+   "estado": "EMITIDO"
+  },
+  "G11": {
+   "ref": "ING-26-0347",
+   "estado": "EMITIDO"
+  },
+  "G12": {
+   "ref": "ING-26-0349",
+   "estado": "RECIBIDO"
+  },
+  "G02": {
+   "ref": "ING-26-0351",
+   "estado": "EN_ANALISIS"
+  }
+ },
+ "huella_actual": {
+  "ING-26-0301": "3D5AD89231061DCAE9717AD7B9C87AE9FDA0016B5CD7D965C7F9349BDE9D94E2",
+  "ING-26-0302": "880D4F2F011A091B9F9D9A98856AB784BD98F153EE68651B6EB2EFCA1C4606DB",
+  "ING-26-0303": "296D5FFD89A9DD4C74E6183387A145E482576D50509ACA370CE8524B71A5FDEC",
+  "ING-26-0304": "26CD54E6AF9AE0798212C855C335FF8C9085E60588FE9B3FD16EF4158C8F859B",
+  "ING-26-0305": "2725B04C9F80AD44C65983191641F8668A8404B291F70B6195D1E569030387C9",
+  "ING-26-0306": "914D9205F46503D419D163B581B9CC865F0961F0583F0E55531C61B4846FE097",
+  "ING-26-0307": "863AECA47898AFAA189A101CC1437B8F547173A8BEE1774E4BBDD0DD14BFDDBF",
+  "ING-26-0308": "6835DCCAA00A549347B968288C4410DB9A8C00AD0DA9F342AB49F2B0D948FEBB",
+  "ING-26-0309": "EF205661497712CE6AA5B6224200EA80438ABA3D996F5E61BA570F358FB1920E",
+  "ING-26-0310": "4AC81029CFB2B5CCFB7E65119469A1C7EDAA1560B7FC14FAE6E73DBD87FF9A65",
+  "ING-26-0311": "AE9C97162937E13A554922E92CE67215F215C95DC924E57A24CBBFBB93CAC402",
+  "ING-26-0312": "7E56775577306EC6ED5649BBE6C3014224270DB58BBFE7A09A9B3D8BF6F7B1BE",
+  "ING-26-0313": "92C1B109C8A856F0693ABD9290F0707E94421133398D6867946DCFC06FD966F8",
+  "ING-26-0314": "376BE8DCAB75A4990031F7F127BE50996C000C6F3E12E154E82D76FCF732B4D9",
+  "ING-26-0315": "DF52CCD7AC3FD3930F5336E5029CC6FF32899FC95A32D3744E3A32094E0E43B6",
+  "ING-26-0316": "B382C698EBBD404E2195BC8ED3D31E67E64E71C8FBC53E55F480A8B6DA3C3748",
+  "ING-26-0317": "50CD4F3C460298FD19C87EA5BFC8E2349B9CCCF998AA7E6035BDB81D074AB983",
+  "ING-26-0318": "1D15F44EC85274CCBFCD2265E0841486858D323A825F030FFC2FC95CD5534950",
+  "ING-26-0319": "754104FD7D2475E56D316BD3CCAF16E5E3CADF710C5E78CE8D968CDA406C7CA3",
+  "ING-26-0320": "A22962636D724751645EBD35B2411AFAA0AAB499293AE5984B9CF64EC1DE7204",
+  "ING-26-0321": "D5DFC77E5BFEC1725D5318EEB9C12854811B86C75FDCAB1D357F06C1D3401AA9",
+  "ING-26-0322": "C254DE88FACC3829ACF4C7B848028C37414FCCC46804D1D599EB675F1DCD0807",
+  "ING-26-0323": "BCB62A4D44CD378407ACD316C89A0A1B6270A9D9A896013CE35BB17D2420AF2E",
+  "ING-26-0324": "A7F24AFC47AFA2C453EF19BFB309B155C23CE67F8CA833FDE9F10BED84714104",
+  "ING-26-0325": "0E76E9A7BA2DB3B8BE899B43415D86E1EDBD6D41D8C3313F7F6C3E7746DC02AE",
+  "ING-26-0326": "E73AA917AE9F3FEA2AEF8A56C009006BF98C7DD6B54EC4B4B58CE7D5AA50F0FC",
+  "ING-26-0327": "4BDAC1CC9B1BBAFFD8CEABA1D2E5084702D74BD752038B21C72567BDD189CB74",
+  "ING-26-0328": "5299C0B077D99F2007E6A51197B88EEDACD185CA442B1039D481A162E7AEC2FE",
+  "ING-26-0329": "2E6163986CA4D5CC56CD96E29841FEC615AF84F671447BC5CA94D07C877D8A07",
+  "ING-26-0330": "1130B1CE671344D8938FD4AABEE012DD3AEE9347CE277FCD3F7A3925C00F3CBB",
+  "ING-26-0331": "ADFC3A9DCD48AE2C8ACCD6277290B5D965800B46E26C359501528E913C28DDA5",
+  "ING-26-0332": "1FC62F2ED331F78096A43F2DCAFEE5415105D0906CD7FF9C842482FDF63C2C92",
+  "ING-26-0333": "EEE5853F81D517C66A6FBEC42F1E7E905363542716EE8F09594CFD3EFE4A4822",
+  "ING-26-0334": "D6A998612193B252A9C005C661B0128A6119D2FD50E0F324F08DD9415AA0AEE2",
+  "ING-26-0335": "CB8AEEE08361A741DF197EC947514C01C28F2FDCE676BF00A765AB2CC431B62C",
+  "ING-26-0336": "1D2206126AB796544F2EEB3648453100E22BF2A93555C3CE7639FCCA1466C8D7",
+  "ING-26-0337": "32E5B70C39FC3D119C3C6EBFAFA65A7010A7606D63C41FA9673A7C649B4AF281",
+  "ING-26-0338": "ABD93697AF2C52BD7387AAC90796CD4780DA6E85C0270D1026A4C22EA55A5DB4",
+  "ING-26-0339": "27B160DAE2CCBF0EA3819ABC3F0A59A1FDB138BA48E8BCA42C993E98919C252B",
+  "ING-26-0340": "6CC2A59EB78D94281794DA1969C0A3D171FDD9C155766C211B799F7792A06E7F",
+  "ING-26-0341": "4AC5693E4D1AC5049E81310E4FE9ADC9BF4ABD9439E361941FD3FC7F9B31C9F3",
+  "ING-26-0342": "81AC2AFC51D57F4AA136EE4479B38F5A1E11353011935DCF4D3210411A40F465",
+  "ING-26-0343": "3A3D59B6D88B9B124E0D42CE14CE10B7570D3858663C266B8F83DC73392ADA1D",
+  "ING-26-0344": "09450816BFA0410DA13D52A3488171C99917BF359DCE9F73DE8A854A94096E95",
+  "ING-26-0345": "B9EE86E2FA613072A30097E9F6F330ED30F30E8F4E8B4B6EA1931C04AFB32DFC",
+  "ING-26-0346": "25AD418C5870506EFA71251832067DC613EE1175B7A11B53966941F6B3709255",
+  "ING-26-0347": "675166C8D28A33337625B4C6467E1902E03D986BDDD69DE9F7E40E0C39F24E73",
+  "ING-26-0348": "33309D2DB5B7BA8E78C3B80FBAC7DD3C1F1B35613A69A0E53ED6E3290ABEDE96",
+  "ING-26-0349": "9E9BA2512C5C1C3A2269EE16D62B98BB34F115F5DAE12E687356F2A5E25B522E",
+  "ING-26-0350": "2FEE8064A97323045A0973723A435E0CD85141C529E03FC6882C080591B1F5EE",
+  "ING-26-0351": "2CC4AF47E87D8DD80C36AE7F019C737D2ECB1CC8AFA811C398CE6DBAA2BC42C4",
+  "ING-26-0352": "FD0368C1A173F6C126F2B4614C98314617D9E4434251772AC0F0BE503A4525F2"
+ },
+ "canon_ejemplo": {
+  "expediente": "ING-26-0301",
+  "canon": "{\"aislados\":[],\"cab\":[\"ING-26-0301\",\"P08\",\"R02\",\"VG-1320\",\"vigilancia_activa\",\"2026-08-24\",\"2026-08-25T11:00:00+02:00\",\"\",\"\"],\"comunicaciones\":[],\"muestras\":[[\"ING-26-0301-M01\",\"ovino\",\"sangre_edta\",\"Crotal DEMO-652\",\"refrigerada\",\"gt48\",\"1\",\"0\"],[\"ING-26-0301-M02\",\"ovino\",\"sangre_edta\",\"Crotal DEMO-399\",\"refrigerada\",\"lt24\",\"1\",\"0\"],[\"ING-26-0301-M03\",\"ovino\",\"sangre_edta\",\"Crotal DEMO-373\",\"refrigerada\",\"lt24\",\"1\",\"0\"]],\"resultados\":[[\"ING-26-0301-M01-pcr_btv\",\"negativo||T-2026-058\"],[\"ING-26-0301-M01-pcr_ehdv\",\"negativo||T-2026-059\"],[\"ING-26-0301-M02-pcr_btv\",\"negativo||T-2026-058\"],[\"ING-26-0301-M02-pcr_ehdv\",\"negativo||T-2026-059\"],[\"ING-26-0301-M03-pcr_btv\",\"negativo||T-2026-058\"],[\"ING-26-0301-M03-pcr_ehdv\",\"negativo||T-2026-059\"]],\"valoraciones\":[[\"REC-01~ING-26-0301-M01\",\"Desviación registrada; el informe lleva salvedad.\"]]}"
+ },
+ "panel": {
+  "kpi_muestras": 105,
+  "kpi_en_curso": 13,
+  "kpi_por_validar": 7,
+  "kpi_tat_mediana_dias": 4.2,
+  "kpi_tat_p90_dias": 7.1,
+  "tat_n": 38,
+  "tat_dentro_objetivo_pct": 87,
+  "tat_tramos": {
+   "<3": 6,
+   "3-5": 17,
+   "5-7": 10,
+   ">7": 5
+  },
+  "estados": {
+   "EMITIDO": 38,
+   "BLOQUEADO": 1,
+   "PENDIENTE_VALORACION": 2,
+   "LISTO_PARA_VALIDAR": 5,
+   "EN_ANALISIS": 3,
+   "RECIBIDO": 3
+  },
+  "muestras_por_semana": {
+   "2026-08-24": 7,
+   "2026-08-31": 5,
+   "2026-09-07": 7,
+   "2026-09-14": 12,
+   "2026-09-21": 9,
+   "2026-09-28": 11,
+   "2026-10-05": 20,
+   "2026-10-12": 26,
+   "2026-10-19": 8
+  },
+  "muestras_por_tipo_procedencia": {
+   "ganadera": 66,
+   "cinegetica": 32,
+   "mixta": 7
+  },
+  "aislados_con_antibiograma": 32,
+  "aislados_mdr": 8,
+  "resistencia_por_antimicrobiano": {
+   "amoxi_clav": {
+    "R": 0,
+    "n": 13,
+    "pct": 0
+   },
+   "ampicilina": {
+    "R": 12,
+    "n": 28,
+    "pct": 43
+   },
+   "cefoxitina": {
+    "R": 1,
+    "n": 4,
+    "pct": 25
+   },
+   "ceftiofur": {
+    "R": 0,
+    "n": 28,
+    "pct": 0
+   },
+   "colistina": {
+    "R": 1,
+    "n": 13,
+    "pct": 8
+   },
+   "enrofloxacino": {
+    "R": 1,
+    "n": 28,
+    "pct": 4
+   },
+   "eritromicina": {
+    "R": 0,
+    "n": 17,
+    "pct": 0
+   },
+   "florfenicol": {
+    "R": 0,
+    "n": 19,
+    "pct": 0
+   },
+   "gentamicina": {
+    "R": 0,
+    "n": 17,
+    "pct": 0
+   },
+   "penicilina": {
+    "R": 2,
+    "n": 19,
+    "pct": 11
+   },
+   "sxt": {
+    "R": 10,
+    "n": 32,
+    "pct": 31
+   },
+   "tetraciclina": {
+    "R": 16,
+    "n": 32,
+    "pct": 50
+   },
+   "tulatromicina": {
+    "R": 1,
+    "n": 2,
+    "pct": 50
+   }
+  },
+  "aislados_por_taxon": {
+   "t_ecoli": 9,
+   "t_suberis": 9,
+   "t_tpyog": 4,
+   "t_salmonella": 4,
+   "t_saureus": 4,
+   "t_pmult": 1,
+   "t_mhaem": 1,
+   "t_ochro": 1
+  },
+  "tandas_total": 44,
+  "tandas_validas": 41,
+  "tandas_no_validas_por_regla": {
+   "PCR-03": 1,
+   "PCR-01": 1,
+   "PCR-02": 1
+  },
+  "alertas_por_nivel": {
+   "revisar": 33,
+   "info": 7,
+   "critico": 1
+  },
+  "muestras_con_desviacion": 9,
+  "muestras_no_rechazadas": 104,
+  "badge_alertas": 8,
+  "bandeja_micro": 10,
+  "bandeja_molecular": 5,
+  "badge_informes": 5
+ },
+ "siguiente_referencia": "ING-26-0353",
+ "siguiente_tanda": "T-2026-085"
+}

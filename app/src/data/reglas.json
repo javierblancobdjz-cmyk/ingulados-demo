@@ -1,0 +1,248 @@
+{
+  "version": "reglas-2026-10-19",
+  "_nota": "Motor único en capas. 'condicion.tipo' es una enumeración cerrada implementada en js/motor.js (ver CONTRATO_DATOS.md §7). Los textos *_md admiten solo *cursiva*. No se inventan umbrales: los que son criterio del laboratorio llevan criterio_laboratorio=true y se rotulan así en la interfaz.",
+  "niveles": [
+    { "id": "info", "nombre": "Información", "orden": 1, "requiere_valoracion": false, "icono": "info" },
+    { "id": "revisar", "nombre": "Revisar", "orden": 2, "requiere_valoracion": true, "icono": "triangle-alert" },
+    { "id": "critico", "nombre": "Crítico", "orden": 3, "requiere_valoracion": true, "icono": "octagon-alert" },
+    { "id": "no_valido", "nombre": "No válido", "orden": 0, "requiere_valoracion": false, "icono": "ban" }
+  ],
+  "capas": [
+    { "id": "tecnica", "nombre": "Técnica", "descripcion": "Recepción de la muestra y controles de cada tanda" },
+    { "id": "analitica", "nombre": "Analítica", "descripcion": "Coherencia y relevancia de cada resultado" },
+    { "id": "sanitaria", "nombre": "Sanitaria", "descripcion": "Una sola alerta por patógeno y expediente" }
+  ],
+  "reglas": [
+    {
+      "id": "REC-01", "capa": "tecnica", "nivel": "revisar", "ambito": "muestra", "demo": true,
+      "titulo": "Recepción fuera de condiciones",
+      "condicion_texto": "Llegada a temperatura ambiente (más de 8 °C) o fijada en formol, más de 48 h desde la toma, o envase no íntegro.",
+      "condicion": { "tipo": "recepcion_fuera_condiciones", "conservaciones": ["ambiente", "formol"], "tiempos": ["gt48"], "envase_no_integro": true },
+      "criterio_laboratorio": true,
+      "mensaje_md": "La muestra llegó fuera de las condiciones de recepción. Se analiza igualmente y el informe llevará una salvedad.",
+      "accion_md": "Registrar la desviación; si el resultado sale negativo, valorar pedir una nueva muestra.",
+      "efecto": "La muestra queda «Aceptada con desviación».",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-03", "REF-01"]
+    },
+    {
+      "id": "REC-02", "capa": "tecnica", "nivel": "info", "ambito": "expediente", "demo": false,
+      "titulo": "Muerte súbita en rumiante: no abrir el cadáver",
+      "condicion_texto": "Motivo «Muerte súbita» y especie rumiante.",
+      "condicion": { "tipo": "motivo_y_especie", "motivos": ["muerte_subita"], "grupos_especie": ["rumiante"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Ante muerte súbita en rumiante hay que descartar carbunco antes de abrir el cadáver. La muestra adecuada es sangre de vena periférica.",
+      "accion_md": "No hacer necropsia abierta hasta descartar carbunco.",
+      "efecto": "Solo informa.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-126"]
+    },
+    {
+      "id": "PCR-01", "capa": "tecnica", "nivel": "no_valido", "ambito": "tanda", "demo": true,
+      "titulo": "El control sin plantilla (NTC) amplifica",
+      "condicion_texto": "El NTC de la tanda tiene Ct (cualquier valor).",
+      "condicion": { "tipo": "tanda_control", "control": "ntc", "falla_si": "amplifica" },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Posible contaminación: ningún resultado de esta tanda es válido, tampoco los positivos.",
+      "accion_md": "Repetir la tanda.",
+      "efecto": "Tanda «No válida»; sus análisis pasan a «Repetir».",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-24", "REF-25"]
+    },
+    {
+      "id": "PCR-02", "capa": "tecnica", "nivel": "no_valido", "ambito": "tanda", "demo": false,
+      "titulo": "El blanco de extracción amplifica",
+      "condicion_texto": "El blanco de extracción (CEX) tiene Ct.",
+      "condicion": { "tipo": "tanda_control", "control": "cex", "falla_si": "amplifica" },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Posible contaminación durante la extracción: los resultados de la tanda no son válidos.",
+      "accion_md": "Reextraer y repetir.",
+      "efecto": "Tanda «No válida»; sus análisis pasan a «Repetir».",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-24", "REF-25"]
+    },
+    {
+      "id": "PCR-03", "capa": "tecnica", "nivel": "no_valido", "ambito": "tanda", "demo": false,
+      "titulo": "Control positivo fuera de rango",
+      "condicion_texto": "El control positivo no amplifica o su Ct queda fuera del rango de la diana (24–30 en muestra; 15–25 en aislado).",
+      "condicion": { "tipo": "tanda_control", "control": "cp", "falla_si": "fuera_de_rango" },
+      "criterio_laboratorio": true,
+      "mensaje_md": "El control positivo no se comporta como se espera: no se puede asegurar la sensibilidad de la tanda.",
+      "accion_md": "Repetir la tanda.",
+      "efecto": "Tanda «No válida»; sus análisis pasan a «Repetir».",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-24", "REF-73"]
+    },
+    {
+      "id": "PCR-04", "capa": "tecnica", "nivel": "revisar", "ambito": "analisis", "demo": false,
+      "titulo": "Muestra inhibida",
+      "condicion_texto": "Sin Ct de la diana y control interno ausente o con Ct > referencia + 3.",
+      "condicion": { "tipo": "pcr_resultado", "resultados": ["inhibido"] },
+      "criterio_laboratorio": true,
+      "mensaje_md": "La PCR pudo estar inhibida: este resultado no puede informarse como negativo.",
+      "accion_md": "Repetir con dilución 1:10 o reextraer; si no es posible, informar «No valorable (inhibición)».",
+      "efecto": "Resultado «No valorable (inhibición)».",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-57", "REF-41"]
+    },
+    {
+      "id": "PCR-05", "capa": "tecnica", "nivel": "revisar", "ambito": "analisis", "demo": true,
+      "titulo": "Ct en zona gris",
+      "condicion_texto": "35 ≤ Ct < 40.",
+      "condicion": { "tipo": "pcr_resultado", "resultados": ["dudoso"] },
+      "criterio_laboratorio": true,
+      "mensaje_md": "Resultado dudoso: el Ct está en la zona gris definida por el laboratorio para este ensayo.",
+      "accion_md": "Repetir por duplicado o con una segunda diana antes de informar.",
+      "efecto": "Resultado «Dudoso».",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-73", "REF-05"]
+    },
+    {
+      "id": "MIC-01", "capa": "analitica", "nivel": "revisar", "ambito": "aislado", "demo": true,
+      "titulo": "Multirresistencia (MDR)",
+      "condicion_texto": "No sensible (I o R) a al menos un antimicrobiano en 3 o más clases, sin contar las resistencias intrínsecas.",
+      "condicion": { "tipo": "mdr", "min_clases": 3 },
+      "criterio_laboratorio": false,
+      "mensaje_md": "El aislado es multirresistente. Criterio adaptado de Magiorakos 2012, propuesto para bacterias de origen humano y aplicado aquí por extrapolación (en *Salmonella*, criterio adaptado).",
+      "accion_md": "Confirmar el antibiograma y añadir al informe un comentario de uso prudente.",
+      "efecto": "Etiqueta «MDR» en el aislado.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-23", "REF-93"]
+    },
+    {
+      "id": "MIC-02", "capa": "analitica", "nivel": "revisar", "ambito": "aislado", "demo": true,
+      "titulo": "Resistencia con gen conocido",
+      "condicion_texto": "R a colistina o a ceftiofur en Enterobacterales, o R a cefoxitina en *S. aureus*.",
+      "condicion": { "tipo": "resistencia_con_gen", "casos": [
+        { "panel": "enterobacterales", "antimicrobiano_id": "colistina", "analisis_id": "pcr_mcr" },
+        { "panel": "enterobacterales", "antimicrobiano_id": "ceftiofur", "analisis_id": "pcr_ctxm" },
+        { "taxon_id": "t_saureus", "antimicrobiano_id": "cefoxitina", "analisis_id": "pcr_mec" } ] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Resistencia relevante para la que existe una PCR del gen responsable.",
+      "accion_md": "Solicitar la PCR del gen en el aislado y cruzar el resultado con el antibiograma.",
+      "efecto": "Ofrece el botón «Solicitar PCR del gen».",
+      "requiere_comunicacion": false, "acciones_rapidas": ["solicitar_pcr_gen"],
+      "refs": ["REF-87", "REF-92", "REF-61", "REF-77"]
+    },
+    {
+      "id": "MIC-03", "capa": "analitica", "nivel": "revisar", "ambito": "aislado", "demo": false,
+      "titulo": "Sensibilidad incompatible",
+      "condicion_texto": "Se registra S en un antimicrobiano al que la especie es resistente de forma intrínseca.",
+      "condicion": { "tipo": "intrinseca_sensible" },
+      "criterio_laboratorio": false,
+      "mensaje_md": "El resultado no es coherente con la resistencia intrínseca de la especie: revisar la identificación o repetir.",
+      "accion_md": "Revisar la identificación o repetir el antibiograma.",
+      "efecto": "Solo pide valoración.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-80"]
+    },
+    {
+      "id": "MIC-04", "capa": "analitica", "nivel": "critico", "ambito": "aislado", "demo": true,
+      "titulo": "*Ochrobactrum* en aborto, ganglio o leche: sospecha de *Brucella*",
+      "condicion_texto": "Identificación *Ochrobactrum* spp. en feto/placenta, ganglio o leche.",
+      "condicion": { "tipo": "taxon_flag_en_muestra", "flag": "sospecha_brucella", "tipos_muestra": ["feto_placenta", "ganglio", "leche"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Las bases de datos de MALDI-TOF pueden identificar *Brucella* como *Ochrobactrum*. Riesgo de exposición del personal.",
+      "accion_md": "No seguir manipulando fuera de NCB3 y derivar a un laboratorio NCB3/oficial.",
+      "efecto": "Pide valoración; acción propuesta «Derivar».",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-97", "REF-95", "REF-118", "REF-81"]
+    },
+    {
+      "id": "PCR-06", "capa": "analitica", "nivel": "revisar", "ambito": "analisis", "demo": false,
+      "titulo": "Gen de resistencia y antibiograma no coinciden",
+      "condicion_texto": "PCR de gen positiva y el antimicrobiano asociado registrado como S.",
+      "condicion": { "tipo": "gen_vs_fenotipo", "modo": "discordante" },
+      "criterio_laboratorio": true,
+      "mensaje_md": "El gen está presente pero el aislado aparece sensible: revisar ambos resultados.",
+      "accion_md": "Repetir el antibiograma o la PCR.",
+      "efecto": "Solo pide valoración.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-92", "REF-61", "REF-77"]
+    },
+    {
+      "id": "PCR-07", "capa": "analitica", "nivel": "info", "ambito": "analisis", "demo": true,
+      "titulo": "Mecanismo de resistencia confirmado",
+      "condicion_texto": "PCR de gen positiva y el antimicrobiano asociado registrado como R.",
+      "condicion": { "tipo": "gen_vs_fenotipo", "modo": "concordante" },
+      "criterio_laboratorio": false,
+      "mensaje_md": "La resistencia observada en el antibiograma se explica por el gen detectado.",
+      "accion_md": "Incluirlo en el informe.",
+      "efecto": "Solo informa.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-87", "REF-92"]
+    },
+    {
+      "id": "SAN-01", "capa": "sanitaria", "nivel": "critico", "ambito": "expediente_patogeno", "demo": false,
+      "titulo": "Posible enfermedad de categoría A (peste porcina africana)",
+      "condicion_texto": "PCR de PPA positiva o dudosa.",
+      "condicion": { "tipo": "patogeno_detectado", "patogenos": ["vppa"], "resultados": ["positivo", "dudoso"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Resultado compatible con una enfermedad de categoría A. La confirmación corresponde a la vía oficial; este laboratorio no confirma.",
+      "accion_md": "Comunicar de inmediato a la autoridad competente y remitir la muestra por la vía oficial.",
+      "efecto": "Pide valoración y registro de la comunicación antes de emitir.",
+      "requiere_comunicacion": true, "acciones_rapidas": [],
+      "refs": ["REF-137", "REF-21", "REF-22", "REF-20", "REF-12"]
+    },
+    {
+      "id": "SAN-02", "capa": "sanitaria", "nivel": "revisar", "ambito": "expediente_patogeno", "demo": true,
+      "titulo": "Vigilancia de peste porcina africana",
+      "condicion_texto": "Suido hallado muerto o con mortalidad anómala, o PPA indicada como sospecha por el remitente.",
+      "condicion": { "tipo": "sospecha_o_motivo", "patogeno_id": "vppa", "motivos": ["hallado_muerto", "mortalidad_anomala"], "grupos_especie": ["suido"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Caso de vigilancia de PPA: hay que valorar el resultado de la PCR antes de emitir.",
+      "accion_md": "Valorar con el resultado de la PCR de PPA. Si es compatible, la alerta sube a Crítico.",
+      "efecto": "Pide valoración.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-12", "REF-100", "REF-40"]
+    },
+    {
+      "id": "SAN-03", "capa": "sanitaria", "nivel": "revisar", "ambito": "expediente_patogeno", "demo": true,
+      "titulo": "Enfermedad de declaración obligatoria",
+      "condicion_texto": "Resultado positivo (o compatible) de complejo *M. tuberculosis*, *Brucella*, Aujeszky, lengua azul o EHE.",
+      "condicion": { "tipo": "patogeno_detectado", "patogenos": ["mtbc", "brucella", "adv", "btv", "ehdv"], "resultados": ["positivo"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Posible enfermedad de declaración obligatoria. Los laboratorios privados de sanidad animal deben comunicar la sospecha de inmediato (máximo 24 h).",
+      "accion_md": "Valorar el resultado y registrar a quién y cuándo se ha comunicado.",
+      "efecto": "Pide valoración y registro de la comunicación antes de emitir.",
+      "requiere_comunicacion": true, "acciones_rapidas": [],
+      "refs": ["REF-137", "REF-20", "REF-21", "REF-22", "REF-136"]
+    },
+    {
+      "id": "SAN-04", "capa": "sanitaria", "nivel": "critico", "ambito": "expediente_patogeno", "demo": false,
+      "titulo": "Compatible con carbunco",
+      "condicion_texto": "Frotis con bacilos capsulados compatibles.",
+      "condicion": { "tipo": "patogeno_detectado", "patogenos": ["b_anthracis"], "resultados": ["positivo"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Resultado compatible con carbunco (agente del grupo de riesgo 3).",
+      "accion_md": "No abrir el cadáver, comunicar de inmediato y derivar a un laboratorio oficial.",
+      "efecto": "Pide valoración y registro de la comunicación antes de emitir.",
+      "requiere_comunicacion": true, "acciones_rapidas": [],
+      "refs": ["REF-126", "REF-137", "REF-22", "REF-138"]
+    },
+    {
+      "id": "SAN-05", "capa": "sanitaria", "nivel": "info", "ambito": "expediente_patogeno", "demo": false,
+      "titulo": "Enfermedad de categoría E (vigilancia)",
+      "condicion_texto": "Positivo de paratuberculosis o de *Coxiella burnetii*.",
+      "condicion": { "tipo": "patogeno_detectado", "patogenos": ["map", "coxiella"], "resultados": ["positivo"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Enfermedad de categoría E en las especies listadas. Valorar si procede notificarla (en fiebre Q, solo bovino, ovino y caprino).",
+      "accion_md": "Incluir en el informe; el veterinario valora la notificación.",
+      "efecto": "Solo informa.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-22", "REF-21"]
+    },
+    {
+      "id": "SAN-06", "capa": "sanitaria", "nivel": "info", "ambito": "expediente_patogeno", "demo": false,
+      "titulo": "Zoonosis",
+      "condicion_texto": "Aislamiento de *Salmonella* o *Listeria monocytogenes*.",
+      "condicion": { "tipo": "patogeno_detectado", "patogenos": ["salmonella", "listeria"], "resultados": ["positivo"] },
+      "criterio_laboratorio": false,
+      "mensaje_md": "Agente zoonósico (grupo de riesgo 2): manipular en cabina de seguridad biológica.",
+      "accion_md": "Incluir en el informe; serotipar *Salmonella* si procede.",
+      "efecto": "Solo informa.",
+      "requiere_comunicacion": false, "acciones_rapidas": [],
+      "refs": ["REF-141", "REF-138", "REF-79"]
+    }
+  ]
+}

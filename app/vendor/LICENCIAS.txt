@@ -1,0 +1,5 @@
+chart.js 4.5.0 (MIT) — npm chart.js@4.5.0, dist/chart.umd.min.js
+qrcode-generator 1.4.4 (MIT) — npm qrcode-generator@1.4.4, qrcode.js
+Raleway 600/700 (SIL OFL 1.1) — npm @fontsource/raleway@5.2.8, subconjunto latin
+Alegreya Sans 400/500/700 (SIL OFL 1.1) — npm @fontsource/alegreya-sans@5.2.8, subconjunto latin
+Iconos Lucide (ISC) — npm lucide-static@1.49.0, SVG minificados
